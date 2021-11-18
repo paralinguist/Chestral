@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://ChestralBoss.gd" type="Script" id=1]
+[ext_resource path="res://sprites/Bird/BirdFly_000.png" type="Texture" id=2]
+
+[sub_resource type="Theme" id=1]
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 1, 0, 0, 1 )
+
+[node name="ChestralBoss" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 2 )
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+margin_left = -99.0
+margin_top = -169.0
+margin_right = 107.0
+margin_bottom = -134.0
+theme = SubResource( 1 )
+custom_styles/fg = SubResource( 2 )
+value = 50.0
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
