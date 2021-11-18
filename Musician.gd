@@ -54,8 +54,15 @@ func set_soothe(soothe_value, additive):
         soothe = soothe_value
     $SootheLabel.text = str(soothe)
 
-func apply_soothe(soothe_value):
-    set_soothe(soothe_value, true)
+#Apply an int of soothe to muso - instant is a bool, is this instant or applied on timer?
+func apply_soothe(soothe_value, instant):
+    if instant:
+        current_irritation = current_irritation - soothe_value
+        if current_irritation < 0:
+            current_irritation = 0
+        else:
+            set_soothe(soothe_value, true)
+            $SootheTimer.start()
     
 func train(name, instrument, id):
     playername = name
@@ -85,5 +92,7 @@ func _on_IntTimer_timeout():
 
 
 func _on_SootheTimer_timeout():
+    current_irritation = current_irritation - soothe
+    if current_irritation < 0:
+        current_irritation = 0
     set_soothe(0, false)
-    #Need to actually heal here
