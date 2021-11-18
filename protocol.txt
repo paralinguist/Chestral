@@ -1,0 +1,28 @@
+protocol:
+
+align|<int>
+aligm|<int>x<int>
+inter|<int>
+adjin|<int>
+sooth|<int>
+sooae|<int>
+reson|<int>
+harmo|<int>
+
+align - check for harmonics or resonance and then deal damage
+aligm - check for harmonics or resonance then deal int damage int times
+inter - apply interference to a character, start a 20s timer
+adjin - apply interference to the next character, start a 20s timer
+sooth - apply healing to adjacent character - 5s timer
+sooae - apply healing to all characters - instant
+reson - apply resonance to adjacent character - active until used or replaced
+harmo - apply harmonics to adjacent character - active until used or replaced
+
+Maestro:
+shint|<idS>|<idD>
+shsoo|<idS>|<idD>
+shres|<idS>|<idD>
+shhar|<idS>|<idD>
+
+shifts a buff from the source to the destination.
+Requires sending the IDs to the maestro character
