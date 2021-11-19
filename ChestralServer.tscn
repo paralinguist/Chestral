@@ -47,10 +47,10 @@ __meta__ = {
 }
 
 [node name="Button" type="Button" parent="Panel"]
-margin_left = 191.0
-margin_top = 243.0
-margin_right = 264.0
-margin_bottom = 274.0
+margin_left = 278.0
+margin_top = 318.0
+margin_right = 351.0
+margin_bottom = 349.0
 text = "Test"
 __meta__ = {
 "_edit_use_anchors_": false

@@ -70,10 +70,11 @@ func _disconnected(id, was_clean = false):
     # was correctly notified by the remote peer before closing the socket.
     var cnx = "Client %d disconnected, clean: %s" % [id, str(was_clean)]
     $Panel/LabelConnections.text = cnx
-    $Panel/MessageLog.text += clients[id].playername + ' has left the server.\n'
-    remove_child(clients[id])
-    clients.erase(id)
-    arrange_musicians()
+    if id in clients:
+        $Panel/MessageLog.text += clients[id].playername + ' has left the server.\n'
+        remove_child(clients[id])
+        clients.erase(id)
+        arrange_musicians()
     $Panel/MessageLog.scroll_vertical=INF
 
 func _on_data(id):
@@ -92,8 +93,11 @@ func _on_data(id):
         $Panel/MessageLog.scroll_vertical=INF
         message = '||:' + str(id)
     else:
-        $Panel/MessageLog.text += clients[id].playername + ': ' + incoming + "\n"
-        $Panel/MessageLog.scroll_vertical=INF
+        if id in clients:
+            $Panel/MessageLog.text += clients[id].playername + ': ' + incoming + "\n"
+            $Panel/MessageLog.scroll_vertical=INF
+        else:
+            incoming = ''
     if incoming:
         _server.get_peer(id).put_packet(message.to_utf8())
         if incoming.begins_with('align|'):
@@ -135,7 +139,9 @@ func _process(delta):
 
 func _on_Button_pressed():
     for client in clients:
+        print('attempting to send to ' + str(client))
         if _server.get_peer(client):
-          _server.get_peer(client).put_packet('YO!'.to_utf8())
+            print('Yes, sending.')
+            _server.get_peer(client).put_packet('YO!'.to_utf8())
         else:
-          print("No sendy?")
+            print("No sendy?")
