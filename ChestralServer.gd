@@ -9,6 +9,8 @@ var _server = WebSocketServer.new()
 
 var clients = {}
 
+var players = []
+
 var Musician = load("res://Musician.tscn")
 
 #Some weird magic numbers in here - need to lock down the polygon geometry
@@ -79,8 +81,16 @@ func _disconnected(id, was_clean = false):
         $Panel/MessageLog.text += clients[id].playername + ' has left the server.\n'
         remove_child(clients[id])
         clients.erase(id)
+        players.remove(players.find(id))
         arrange_musicians()
     $Panel/MessageLog.scroll_vertical=INF
+
+#Returns the id of the next muso in the circle. If last, returns first.
+func get_adjacent(id):
+    var adjacent = players.find(id) + 1
+    if adjacent >= len(players):
+        adjacent = 0
+    return players[adjacent]
 
 func _on_data(id):
     # Print the received packet, you MUST always use get_peer(id).get_packet to receive data,
@@ -93,6 +103,7 @@ func _on_data(id):
     #_server.get_peer(id).put_packet(pkt)
     if incoming.begins_with('||:'):
         clients[id] = create_musician(incoming.right(3), 'Violin', id)
+        players.append(id)
         arrange_musicians()
         $Panel/MessageLog.text += incoming.right(3) + ' has entered the server.\n'
         $Panel/MessageLog.scroll_vertical=INF
@@ -114,20 +125,7 @@ func _on_data(id):
             clients[id].apply_int(inter_value)
         elif incoming.begins_with('adjin|'):
             var inter_value = int(incoming.right(6))
-            #This should be a function - return an adjacent muso
-            #Good GOD this code needs robust testing. It makes my skin crawl.
-            #Maybe use an array referencing IDs when adding children instead?
-            var next = false
-            for client in clients:
-                print('Client: ' + str(client) + ' id: ' + str(id))
-                if next:
-                    clients[client].apply_int(inter_value)
-                    next = false
-                    break
-                if id == client:
-                    next = true
-            if next:
-                clients.values().back().apply_int(inter_value)
+            clients[get_adjacent(id)].apply_int(inter_value)
         elif incoming.begins_with('sooae|'):
             #Need to implement this as instant
             var soothe_value = int(incoming.right(6))
