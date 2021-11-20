@@ -56,7 +56,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="LabelIPs" type="Label" parent="Panel"]
+margin_left = 32.0
+margin_top = 15.0
+margin_right = 334.0
+margin_bottom = 50.0
+
 [node name="ChestralBoss" parent="." instance=ExtResource( 2 )]
-position = Vector2( 734, 458 )
+position = Vector2( 760, 526 )
 
 [connection signal="pressed" from="Panel/Button" to="." method="_on_Button_pressed"]

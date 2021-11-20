@@ -74,7 +74,13 @@ func train(name, instrument, id):
         base_align = 10
         image = load("res://Sprites/Instruments/violin.png")  
     $Sprite.texture = image
-    
+
+
+func set_avatar(filename):
+    var avatar_file = 'res://Sprites/Orcs/' + filename
+    if ResourceLoader.exists(avatar_file):
+        image = load(avatar_file)
+        $Sprite.texture = image
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):

@@ -18,14 +18,14 @@ func arrange_musicians():
     if sides > 0:
         var angle = -1 * 360 / sides * 2.5
         var x = radius * cos(angle) + radius * 2.2
-        var y = radius * sin(angle) + radius * 0.6
+        var y = radius * sin(angle) + radius * 0.9
         #print(str(x) +','+ str(y))
         var line = 1
         for client_id in clients:
             var client = clients[client_id]
             client.reposition(x,y)
             x = radius * cos(angle + line * 2 * PI / sides) + radius * 2.2
-            y = radius * sin(angle + line * 2 * PI / sides) + radius * 0.6
+            y = radius * sin(angle + line * 2 * PI / sides) + radius * 0.9
             line = line + 1
             #print(str(x) +','+ str(y))
 
@@ -51,7 +51,12 @@ func _ready():
     if err != OK:
         print("Unable to start server")
         set_process(false)
-        
+    $Panel/LabelIPs.text = 'Server IP/s: '
+    var ip
+    for address in IP.get_local_addresses():
+        if (address.split('.').size() == 4) and not (address.begins_with('169') or address.begins_with('127')):
+            $Panel/LabelIPs.text += ' ( ' + address + ' ) '
+    
 func _connected(id, proto):
     # This is called when a new peer connects, "id" will be the assigned peer id,
     # "proto" will be the selected WebSocket sub-protocol (which is optional)
@@ -128,6 +133,8 @@ func _on_data(id):
             var soothe_value = int(incoming.right(6))
             for client in clients:
                 clients[client].apply_soothe(soothe_value, true)
+        elif incoming.begins_with('avata|'):
+            clients[id].set_avatar(incoming.right(6))
                     
         $Panel/MessageLog.scroll_vertical=INF
 
