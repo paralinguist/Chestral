@@ -135,7 +135,7 @@ func _on_data(id):
             clients[get_adjacent(id)].apply_int(inter_value)
         elif incoming.begins_with('sooth|'):
             var soothe_value = int(incoming.right(6))
-            clients[get_adjacent(id)].apply_soothe(soothe_value)
+            clients[get_adjacent(id)].apply_soothe(soothe_value, false)
         elif incoming.begins_with('reson|'):
             var reson_value = int(incoming.right(6))
             clients[get_adjacent(id)].apply_resonance(reson_value)
@@ -143,7 +143,6 @@ func _on_data(id):
             var harmo_value = int(incoming.right(6))
             clients[get_adjacent(id)].apply_harmonics(harmo_value)
         elif incoming.begins_with('sooae|'):
-            #Need to implement this as instant
             var soothe_value = int(incoming.right(6))
             for client in clients:
                 clients[client].apply_soothe(soothe_value, true)

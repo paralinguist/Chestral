@@ -43,11 +43,11 @@ func set_harmonics(harmonics_value, additive):
         if harmonics <= 0:
             harmonics = 0
         else:
-            $HarmonicsLabel.visible = true
+            $Harmonics/HarmonicsLabel.visible = true
             $Harmonics.visible = true
     else:
         harmonics = harmonics_value
-    $HarmonicsLabel.text = str(harmonics)
+    $Harmonics/HarmonicsLabel.text = str(harmonics)
 
 #directly changes resonance + label bar
 func set_resonance(resonance_value, additive):
@@ -56,11 +56,11 @@ func set_resonance(resonance_value, additive):
         if resonance <= 0:
             resonance = 0
         else:
-            $ResonanceLabel.visible = true
+            $Resonance/ResonanceLabel.visible = true
             $Resonance.visible = true
     else:
         resonance = resonance_value
-    $ResonanceLabel.text = str(resonance)
+    $Resonance/ResonanceLabel.text = str(resonance)
 
 #Applies interference with a timer
 func apply_int(inter_value):
@@ -96,9 +96,9 @@ func apply_soothe(soothe_value, instant):
         current_irritation = current_irritation - soothe_value
         if current_irritation < 0:
             current_irritation = 0
-        else:
-            set_soothe(soothe_value, true)
-            $SootheTimer.start()
+    else:
+        set_soothe(soothe_value, true)
+        $SootheTimer.start()
     
 func train(name, instrument, id):
     playername = name
@@ -117,15 +117,25 @@ func set_avatar(filename):
         image = load(avatar_file)
         $Sprite.texture = image
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
+#TODO: check for death
 func _process(delta):
+    $Irritation.value = current_irritation
+    $Soothe.value = $SootheTimer.time_left
     $Interference.value = $IntTimer.time_left
+    $Harmonics.value = $HarmonicsTimer.time_left
+    $Resonance.value = $ResonanceTimer.time_left
     if soothe <= 0:
         $Soothe/SootheLabel.visible = false
         $Soothe.visible = false
     if interference <= 0:
         $Interference/InterferenceLabel.visible = false
         $Interference.visible = false
+    if harmonics <= 0:
+        $Harmonics/HarmonicsLabel.visible = false
+        $Harmonics.visible = false
+    if resonance <= 0:
+        $Resonance/ResonanceLabel.visible = false
+        $Resonance.visible = false
 
 func _on_IntTimer_timeout():
     set_interference(0, false)
