@@ -118,14 +118,30 @@ func _on_data(id):
         _server.get_peer(id).put_packet(message.to_utf8())
         if incoming.begins_with('align|'):
             var align_value = int(incoming.right(6))
-            var damage_done = $ChestralBoss.realign(align_value)
-            $Panel/MessageLog.text += clients[id].playername + ' did damage: ' + str(damage_done) + '\n'
+            #Should pass id so boss can calculate resonance/harmonics
+            var align_done = $ChestralBoss.realign(align_value, 1)
+            $Panel/MessageLog.text += clients[id].playername + ' aligned: ' + str(align_done) + '\n'
+        elif incoming.begins_with('aligm|'):
+            var align_value = incoming.right(6)
+            align_value = align_value.split('x')
+            var align_mag = align_value[0]
+            var times = align_value[1]
+            var align_done = $ChestralBoss.realign(align_mag, times)
         elif incoming.begins_with('inter|'):
             var inter_value = int(incoming.right(6))
             clients[id].apply_int(inter_value)
         elif incoming.begins_with('adjin|'):
             var inter_value = int(incoming.right(6))
             clients[get_adjacent(id)].apply_int(inter_value)
+        elif incoming.begins_with('sooth|'):
+            var soothe_value = int(incoming.right(6))
+            clients[get_adjacent(id)].apply_soothe(soothe_value)
+        elif incoming.begins_with('reson|'):
+            var reson_value = int(incoming.right(6))
+            clients[get_adjacent(id)].apply_resonance(reson_value)
+        elif incoming.begins_with('harmo|'):
+            var harmo_value = int(incoming.right(6))
+            clients[get_adjacent(id)].apply_harmonics(harmo_value)
         elif incoming.begins_with('sooae|'):
             #Need to implement this as instant
             var soothe_value = int(incoming.right(6))

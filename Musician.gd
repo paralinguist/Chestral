@@ -30,16 +30,52 @@ func set_interference(inter_value, additive):
         if interference <= 0:
             interference = 0
         else:
-            $InterferenceLabel.visible = true
+            $Interference/InterferenceLabel.visible = true
             $Interference.visible = true
     else:
         interference = inter_value
-    $InterferenceLabel.text = str(interference)
+    $Interference/InterferenceLabel.text = str(interference)
+
+#directly changes harmonics + label bar
+func set_harmonics(harmonics_value, additive):
+    if additive:
+        harmonics = harmonics + harmonics_value
+        if harmonics <= 0:
+            harmonics = 0
+        else:
+            $HarmonicsLabel.visible = true
+            $Harmonics.visible = true
+    else:
+        harmonics = harmonics_value
+    $HarmonicsLabel.text = str(harmonics)
+
+#directly changes resonance + label bar
+func set_resonance(resonance_value, additive):
+    if additive:
+        resonance = resonance + resonance_value
+        if resonance <= 0:
+            resonance = 0
+        else:
+            $ResonanceLabel.visible = true
+            $Resonance.visible = true
+    else:
+        resonance = resonance_value
+    $ResonanceLabel.text = str(resonance)
 
 #Applies interference with a timer
 func apply_int(inter_value):
     set_interference(inter_value, true)
     $IntTimer.start()
+
+#Applies harmonics with a timer
+func apply_harmonics(harmonics_value):
+    set_harmonics(harmonics_value, true)
+    $HarmonicsTimer.start()
+    
+#Applies resonance with a timer
+func apply_resonance(resonance_value):
+    set_resonance(resonance_value, true)
+    $ResonanceTimer.start()
 
 #directly changes soothe + label bar
 func set_soothe(soothe_value, additive):
@@ -48,11 +84,11 @@ func set_soothe(soothe_value, additive):
         if soothe <= 0:
             soothe = 0
         else:
-            $SootheLabel.visible = true
+            $Soothe/SootheLabel.visible = true
             $Soothe.visible = true
     else:
         soothe = soothe_value
-    $SootheLabel.text = str(soothe)
+    $Soothe/SootheLabel.text = str(soothe)
 
 #Apply an int of soothe to muso - instant is a bool, is this instant or applied on timer?
 func apply_soothe(soothe_value, instant):
@@ -75,7 +111,6 @@ func train(name, instrument, id):
         image = load("res://Sprites/Instruments/violin.png")  
     $Sprite.texture = image
 
-
 func set_avatar(filename):
     var avatar_file = 'res://Sprites/Orcs/' + filename
     if ResourceLoader.exists(avatar_file):
@@ -86,19 +121,23 @@ func set_avatar(filename):
 func _process(delta):
     $Interference.value = $IntTimer.time_left
     if soothe <= 0:
-        $SootheLabel.visible = false
+        $Soothe/SootheLabel.visible = false
         $Soothe.visible = false
     if interference <= 0:
-        $InterferenceLabel.visible = false
+        $Interference/InterferenceLabel.visible = false
         $Interference.visible = false
-
 
 func _on_IntTimer_timeout():
     set_interference(0, false)
-
 
 func _on_SootheTimer_timeout():
     current_irritation = current_irritation - soothe
     if current_irritation < 0:
         current_irritation = 0
     set_soothe(0, false)
+
+func _on_HarmonicsTimer_timeout():
+    set_harmonics(0, false)
+
+func _on_ResonanceTimer_timeout():
+    set_resonance(0, false)
