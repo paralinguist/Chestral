@@ -13,6 +13,8 @@ var players = []
 
 var Musician = load("res://Musician.tscn")
 
+var rng : RandomNumberGenerator = RandomNumberGenerator.new()
+
 #Some weird magic numbers in here - need to lock down the polygon geometry
 func arrange_musicians():
     var radius = 350
@@ -58,6 +60,8 @@ func _ready():
     for address in IP.get_local_addresses():
         if (address.split('.').size() == 4) and not (address.begins_with('169') or address.begins_with('127')):
             $Panel/LabelIPs.text += ' ( ' + address + ' ) '
+    
+    rng.randomize()
     
 func _connected(id, proto):
     # This is called when a new peer connects, "id" will be the assigned peer id,
@@ -167,17 +171,16 @@ func _process(delta):
     _server.poll()
 
 
-func _on_Button_pressed():
-    for client in clients:
-        print('attempting to send to ' + str(client))
-        if _server.get_peer(client):
-            print('Yes, sending.')
-            _server.get_peer(client).put_packet('YO!'.to_utf8())
-        else:
-            print("No sendy?")
-
-
 func _on_ServerDataPulse_timeout():
     for client in clients:
         var client_state = 'state|' + JSON.print(clients[client].get_state())
         _server.get_peer(client).put_packet(client_state.to_utf8())
+
+#Debugging tools
+func _on_Button_pressed():
+    var victim = clients[players[randi() % players.size()]]
+    var dissonance = rng.randi_range(10,50)
+    print('Squarked at ' + victim.playername + ' for: ' + str(victim.irritate(dissonance)))
+
+func _on_Unbalance_pressed():
+    $ChestralBoss.misalignment += 500

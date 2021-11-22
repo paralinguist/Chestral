@@ -136,6 +136,9 @@ func _process(delta):
     if resonance <= 0:
         $Resonance/ResonanceLabel.visible = false
         $Resonance.visible = false
+        
+    $Irritation.value = current_irritation
+    #Need to check for "dead" player here and handle
 
 func _on_IntTimer_timeout():
     set_interference(0, false)
@@ -169,3 +172,13 @@ func get_state():
     state['resonance_time'] = $Resonance.value
     state['harmonics_time'] = $Harmonics.value
     return state
+
+func irritate(dissonance):
+    interference = interference - dissonance
+    var damage_done = 0
+    if interference < 0:
+        current_irritation = current_irritation - interference
+        damage_done = interference
+        interference = 0
+    #Should animate over this muso to show they got annoyed
+    return damage_done

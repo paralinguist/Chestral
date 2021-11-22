@@ -46,12 +46,22 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Button" type="Button" parent="Panel"]
-margin_left = 278.0
-margin_top = 318.0
-margin_right = 351.0
-margin_bottom = 349.0
-text = "Test"
+[node name="HitRandom" type="Button" parent="Panel"]
+margin_left = 268.0
+margin_top = 258.0
+margin_right = 355.0
+margin_bottom = 289.0
+text = "Hit Random"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Unbalance" type="Button" parent="Panel"]
+margin_left = 269.0
+margin_top = 298.0
+margin_right = 356.0
+margin_bottom = 329.0
+text = "Unbalance"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -72,5 +82,6 @@ position = Vector2( 760, 526 )
 wait_time = 5.0
 autostart = true
 
-[connection signal="pressed" from="Panel/Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="Panel/HitRandom" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="Panel/Unbalance" to="." method="_on_Unbalance_pressed"]
 [connection signal="timeout" from="ServerDataPulse" to="." method="_on_ServerDataPulse_timeout"]
