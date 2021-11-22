@@ -1,6 +1,7 @@
 from websocket import create_connection
 import threading
 import asyncio
+import json
 
 active = True
 server_message = ''
@@ -11,14 +12,44 @@ server_message = ''
 #num_musos (integer - how many musos are connected)
 #muso_list (list - from json - of muso dicts)
 
+playername = 'Muso'
+instrument = 'Voice'
+max_irritation = 200
+current_irritation = 0
+interference = 0
+soothe = 0
+resonance = 0
+harmonics = 0
+connection_id = 0
 
 #Listener thread receives responses from the server
 #It writes to global variables for access via other functions
 def listener(server):
   global server_message
   while active:
-    server_message = server.recv()
-    print(server_message, end='\n> ')
+    server_message = server.recv().decode("utf-8")
+    if server_message.startswith('state|'):
+      state = json.loads(server_message[6:])
+      global playername 
+      playername = state['name']
+      global connection_id 
+      connection_id = state['id']
+      global instrument
+      instrument = state['instrument']
+      global max_irritation
+      max_irritation = state['max_irritation']
+      global current_irritation
+      current_irritation = state['irritation']
+      global interference
+      interference = state['interference']
+      global soothe
+      soothe = state['soothe']
+      global resonance
+      resonance = state['resonance']
+      global harmonics
+      harmonics = state['harmonics']
+    else:
+      print(server_message, end='\n> ')
 
 def send(message):
   global server

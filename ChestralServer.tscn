@@ -68,4 +68,9 @@ __meta__ = {
 [node name="ChestralBoss" parent="." instance=ExtResource( 2 )]
 position = Vector2( 760, 526 )
 
+[node name="ServerDataPulse" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
 [connection signal="pressed" from="Panel/Button" to="." method="_on_Button_pressed"]
+[connection signal="timeout" from="ServerDataPulse" to="." method="_on_ServerDataPulse_timeout"]

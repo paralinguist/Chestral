@@ -10,6 +10,9 @@ message = ''
 
 while message != 'quit':
   message = input('> ')
-  lib_chestral.send(message)
+  if message == 'print':
+    print(f'My ID: {lib_chestral.connection_id}')
+  else:
+    lib_chestral.send(message)
 
 lib_chestral.disconnect()

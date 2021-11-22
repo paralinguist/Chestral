@@ -151,3 +151,21 @@ func _on_HarmonicsTimer_timeout():
 
 func _on_ResonanceTimer_timeout():
     set_resonance(0, false)
+
+#Send image filename too?
+func get_state():
+    var state = {}
+    state['id'] = connection_id
+    state['name'] = playername
+    state['instrument'] = instrument
+    state['max_irritation'] = max_irritation
+    state['irritation'] = current_irritation
+    state['interference'] = interference
+    state['soothe'] = soothe
+    state['resonance'] = resonance
+    state['harmonics'] = harmonics
+    state['interference_time'] = $Interference.value
+    state['soothe_time'] = $Soothe.value
+    state['resonance_time'] = $Resonance.value
+    state['harmonics_time'] = $Harmonics.value
+    return state
