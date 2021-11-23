@@ -1,7 +1,49 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=35 format=2]
 
 [ext_resource path="res://ChestralBoss.gd" type="Script" id=1]
 [ext_resource path="res://sprites/Bird/BirdFly_000.png" type="Texture" id=2]
+[ext_resource path="res://sprites/Bird/BirdFly_001.png" type="Texture" id=3]
+[ext_resource path="res://sprites/Bird/BirdFly_005.png" type="Texture" id=4]
+[ext_resource path="res://sprites/Bird/BirdFly_003.png" type="Texture" id=5]
+[ext_resource path="res://sprites/Bird/BirdFly_006.png" type="Texture" id=6]
+[ext_resource path="res://sprites/Bird/BirdFly_002.png" type="Texture" id=7]
+[ext_resource path="res://sprites/Bird/BirdFly_008.png" type="Texture" id=8]
+[ext_resource path="res://sprites/Bird/BirdFly_009.png" type="Texture" id=9]
+[ext_resource path="res://sprites/Bird/BirdFly_012.png" type="Texture" id=10]
+[ext_resource path="res://sprites/Bird/BirdFly_013.png" type="Texture" id=11]
+[ext_resource path="res://sprites/Bird/BirdFly_016.png" type="Texture" id=12]
+[ext_resource path="res://sprites/Bird/BirdFly_014.png" type="Texture" id=13]
+[ext_resource path="res://sprites/Bird/BirdFly_015.png" type="Texture" id=14]
+[ext_resource path="res://sprites/Bird/BirdFly_004.png" type="Texture" id=15]
+[ext_resource path="res://sprites/Bird/BirdFly_017.png" type="Texture" id=16]
+[ext_resource path="res://sprites/Bird/BirdFly_010.png" type="Texture" id=17]
+[ext_resource path="res://sprites/Bird/BirdFly_011.png" type="Texture" id=18]
+[ext_resource path="res://sprites/Bird/BirdFly_007.png" type="Texture" id=19]
+[ext_resource path="res://sprites/Bird/BirdFly_018.png" type="Texture" id=20]
+[ext_resource path="res://sprites/Bird/BirdFly_022.png" type="Texture" id=21]
+[ext_resource path="res://sprites/Bird/BirdFly_020.png" type="Texture" id=22]
+[ext_resource path="res://sprites/Bird/BirdFly_027.png" type="Texture" id=23]
+[ext_resource path="res://sprites/Bird/BirdFly_026.png" type="Texture" id=24]
+[ext_resource path="res://sprites/Bird/BirdFly_029.png" type="Texture" id=25]
+[ext_resource path="res://sprites/Bird/BirdFly_021.png" type="Texture" id=26]
+[ext_resource path="res://sprites/Bird/BirdFly_024.png" type="Texture" id=27]
+[ext_resource path="res://sprites/Bird/BirdFly_028.png" type="Texture" id=28]
+[ext_resource path="res://sprites/Bird/BirdFly_019.png" type="Texture" id=29]
+[ext_resource path="res://sprites/Bird/BirdFly_023.png" type="Texture" id=30]
+[ext_resource path="res://sprites/Bird/BirdFly_025.png" type="Texture" id=31]
+
+[sub_resource type="SpriteFrames" id=3]
+animations = [ {
+"frames": [ ExtResource( 2 ) ],
+"loop": true,
+"name": "Idle",
+"speed": 60.0
+}, {
+"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 7 ), ExtResource( 5 ), ExtResource( 15 ), ExtResource( 4 ), ExtResource( 6 ), ExtResource( 19 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 17 ), ExtResource( 18 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 13 ), ExtResource( 14 ), ExtResource( 12 ), ExtResource( 16 ), ExtResource( 20 ), ExtResource( 29 ), ExtResource( 22 ), ExtResource( 26 ), ExtResource( 21 ), ExtResource( 30 ), ExtResource( 27 ), ExtResource( 31 ), ExtResource( 24 ), ExtResource( 23 ), ExtResource( 28 ), ExtResource( 25 ) ],
+"loop": true,
+"name": "Flap",
+"speed": 60.0
+} ]
 
 [sub_resource type="Theme" id=1]
 
@@ -11,8 +53,11 @@ bg_color = Color( 1, 0, 0, 1 )
 [node name="ChestralBoss" type="Node2D"]
 script = ExtResource( 1 )
 
-[node name="Sprite" type="Sprite" parent="."]
-texture = ExtResource( 2 )
+[node name="Sprite" type="AnimatedSprite" parent="."]
+frames = SubResource( 3 )
+animation = "Flap"
+frame = 10
+playing = true
 
 [node name="ProgressBar" type="ProgressBar" parent="."]
 margin_left = -99.0
@@ -26,3 +71,9 @@ percent_visible = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 3.0
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
