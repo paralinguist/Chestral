@@ -182,7 +182,15 @@ one_shot = true
 wait_time = 5.0
 one_shot = true
 
+[node name="HurtTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="HurtShake" type="Tween" parent="."]
+
 [connection signal="timeout" from="IntTimer" to="." method="_on_IntTimer_timeout"]
 [connection signal="timeout" from="HarmonicsTimer" to="." method="_on_HarmonicsTimer_timeout"]
 [connection signal="timeout" from="ResonanceTimer" to="." method="_on_ResonanceTimer_timeout"]
 [connection signal="timeout" from="SootheTimer" to="." method="_on_SootheTimer_timeout"]
+[connection signal="timeout" from="HurtTimer" to="." method="_on_HurtTimer_timeout"]
+[connection signal="tween_completed" from="HurtShake" to="." method="_on_HurtShake_tween_completed"]

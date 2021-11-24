@@ -181,5 +181,26 @@ func irritate(dissonance):
         current_irritation = current_irritation - interference
         damage_done = interference
         interference = 0
+        $Sprite.modulate = Color(1,0.5,0.5)
+        start_hurt_shake()
+        $HurtTimer.start()
     #Should animate over this muso to show they got annoyed
     return damage_done
+
+
+func _on_HurtTimer_timeout():
+    $Sprite.modulate = Color(1,1,1)
+    $HurtShake.stop_all()
+
+func start_hurt_shake():
+    var shake_distance = Vector2()
+    var shake_amplitude = 2
+    shake_distance.x = rand_range(-shake_amplitude, shake_amplitude)
+    shake_distance.y = rand_range(-shake_amplitude, shake_amplitude)
+
+    $HurtShake.interpolate_property($Sprite, "offset", $Sprite.offset, shake_distance, 0.05, Tween.TRANS_SINE)
+    $HurtShake.start()
+
+
+func _on_HurtShake_tween_completed(object, key):
+    start_hurt_shake()
