@@ -17,7 +17,7 @@ var image
 # Called when the node enters the scene tree for the first time.
 func _ready():
     $Sprite.scale = Vector2(0.5,0.5)
-    $Sprite.position.y = $Sprite.position.y + 200
+    $Sprite.position.y -= 80
 
 func reposition(new_x,new_y):
     self.position.x = new_x
@@ -30,11 +30,11 @@ func set_interference(inter_value, additive):
         if interference <= 0:
             interference = 0
         else:
-            $Interference/InterferenceLabel.visible = true
-            $Interference.visible = true
+            $UI/Interference/InterferenceLabel.visible = true
+            $UI/Interference.visible = true
     else:
         interference = inter_value
-    $Interference/InterferenceLabel.text = str(interference)
+    $UI/Interference/InterferenceLabel.text = str(interference)
 
 #directly changes harmonics + label bar
 func set_harmonics(harmonics_value, additive):
@@ -43,11 +43,11 @@ func set_harmonics(harmonics_value, additive):
         if harmonics <= 0:
             harmonics = 0
         else:
-            $Harmonics/HarmonicsLabel.visible = true
-            $Harmonics.visible = true
+            $UI/HBox/Harmonics/HarmonicsLabel.visible = true
+            $UI/HBox/Harmonics.visible = true
     else:
         harmonics = harmonics_value
-    $Harmonics/HarmonicsLabel.text = str(harmonics)
+    $UI/HBox/Harmonics/HarmonicsLabel.text = str(harmonics)
 
 #directly changes resonance + label bar
 func set_resonance(resonance_value, additive):
@@ -56,11 +56,11 @@ func set_resonance(resonance_value, additive):
         if resonance <= 0:
             resonance = 0
         else:
-            $Resonance/ResonanceLabel.visible = true
-            $Resonance.visible = true
+            $UI/HBox/Resonance/ResonanceLabel.visible = true
+            $UI/HBox/Resonance.visible = true
     else:
         resonance = resonance_value
-    $Resonance/ResonanceLabel.text = str(resonance)
+    $UI/HBox/Resonance/ResonanceLabel.text = str(resonance)
 
 #Applies interference with a timer
 func apply_int(inter_value):
@@ -84,11 +84,11 @@ func set_soothe(soothe_value, additive):
         if soothe <= 0:
             soothe = 0
         else:
-            $Soothe/SootheLabel.visible = true
-            $Soothe.visible = true
+            $UI/Soothe/SootheLabel.visible = true
+            $UI/Soothe.visible = true
     else:
         soothe = soothe_value
-    $Soothe/SootheLabel.text = str(soothe)
+    $UI/Soothe/SootheLabel.text = str(soothe)
 
 #Apply an int of soothe to muso - instant is a bool, is this instant or applied on timer?
 func apply_soothe(soothe_value, instant):
@@ -102,7 +102,7 @@ func apply_soothe(soothe_value, instant):
     
 func train(name, instrument, id):
     playername = name
-    $Label.text = name
+    $UI/Label.text = name
     connection_id = id
     image = load("res://Sprites/Instruments/sax.png")
     if instrument == 'Violin':
@@ -119,25 +119,26 @@ func set_avatar(filename):
 
 #TODO: check for death
 func _process(delta):
-    $Irritation.value = current_irritation
-    $Soothe.value = $SootheTimer.time_left
-    $Interference.value = $IntTimer.time_left
-    $Harmonics.value = $HarmonicsTimer.time_left
-    $Resonance.value = $ResonanceTimer.time_left
-    if soothe <= 0:
-        $Soothe/SootheLabel.visible = false
-        $Soothe.visible = false
-    if interference <= 0:
-        $Interference/InterferenceLabel.visible = false
-        $Interference.visible = false
-    if harmonics <= 0:
-        $Harmonics/HarmonicsLabel.visible = false
-        $Harmonics.visible = false
-    if resonance <= 0:
-        $Resonance/ResonanceLabel.visible = false
-        $Resonance.visible = false
+    $UI/HBox/Irritation.value = current_irritation
+    $UI/Soothe.value = $SootheTimer.time_left
+    $UI/Interference.value = $IntTimer.time_left
+    $UI/HBox/Harmonics.value = $HarmonicsTimer.time_left
+    $UI/HBox/Resonance.value = $ResonanceTimer.time_left
+#    Commented this out so the UI is aligned correctly
+#    if soothe <= 0:
+#        $UI/Soothe/SootheLabel.visible = false
+#        $UI/Soothe.visible = false
+#    if interference <= 0:
+#        $UI/Interference/InterferenceLabel.visible = false
+#        $UI/Interference.visible = false
+#    if harmonics <= 0:
+#        $UI/HBox/Harmonics/HarmonicsLabel.visible = false
+#        $UI/HBox/Harmonics.visible = false
+#    if resonance <= 0:
+#        $UI/HBox/Resonance/ResonanceLabel.visible = false
+#        $UI/HBox/Resonance.visible = false
         
-    $Irritation.value = current_irritation
+    $UI/HBox/Irritation.value = current_irritation
     #Need to check for "dead" player here and handle
 
 func _on_IntTimer_timeout():
@@ -167,10 +168,10 @@ func get_state():
     state['soothe'] = soothe
     state['resonance'] = resonance
     state['harmonics'] = harmonics
-    state['interference_time'] = $Interference.value
-    state['soothe_time'] = $Soothe.value
-    state['resonance_time'] = $Resonance.value
-    state['harmonics_time'] = $Harmonics.value
+    state['interference_time'] = $UI/Interference.value
+    state['soothe_time'] = $UI/Soothe.value
+    state['resonance_time'] = $UI/HBox/Resonance.value
+    state['harmonics_time'] = $UI/HBox/Harmonics.value
     return state
 
 func irritate(dissonance):

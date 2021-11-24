@@ -17,21 +17,16 @@ var rng : RandomNumberGenerator = RandomNumberGenerator.new()
 
 #Some weird magic numbers in here - need to lock down the polygon geometry
 func arrange_musicians():
-    var radius = 350
+    var radius = 500
     var sides = len(clients)
-    if sides > 0:
-        var angle = -1 * 360 / sides * 2.5
-        var x = radius * cos(angle) + radius * 2.2
-        var y = radius * sin(angle) + radius * 0.9
-        #print(str(x) +','+ str(y))
-        var line = 1
-        for client_id in clients:
-            var client = clients[client_id]
-            client.reposition(x,y)
-            x = radius * cos(angle + line * 2 * PI / sides) + radius * 2.2
-            y = radius * sin(angle + line * 2 * PI / sides) + radius * 0.9
-            line = line + 1
-            #print(str(x) +','+ str(y))
+    var center = Vector2(800, 500)
+    var count: int = 0
+    for client_id in clients:
+        var client = clients[client_id]
+        var angle = count * (TAU/sides) - TAU/4
+        var new_position = center + radius * Vector2(cos(angle), sin(angle)*0.65)
+        client.reposition(new_position.x, new_position.y)
+        count += 1
 
 func create_musician(name, instrument, id):
     var musician = Musician.instance()
@@ -55,11 +50,11 @@ func _ready():
     if err != OK:
         print("Unable to start server")
         set_process(false)
-    $Panel/LabelIPs.text = 'Server IP/s: '
+    $CanvasLayer/Panel/LabelIPs.text = 'Server IP/s: '
     var ip
     for address in IP.get_local_addresses():
         if (address.split('.').size() == 4) and not (address.begins_with('169') or address.begins_with('127')):
-            $Panel/LabelIPs.text += ' ( ' + address + ' ) '
+            $CanvasLayer/Panel/LabelIPs.text += ' ( ' + address + ' ) '
     
     rng.randomize()
     
@@ -67,27 +62,27 @@ func _connected(id, proto):
     # This is called when a new peer connects, "id" will be the assigned peer id,
     # "proto" will be the selected WebSocket sub-protocol (which is optional)
     var cnx = "Client %d connected with protocol: %s" % [id, proto]
-    $Panel/LabelConnections.text = cnx
+    $CanvasLayer/Panel/LabelConnections.text = cnx
 
 func _close_request(id, code, reason):
     # This is called when a client notifies that it wishes to close the connection,
     # providing a reason string and close code.
     var cnx = "Client %d disconnecting with code: %d, reason: %s" % [id, code, reason]
-    $Panel/LabelConnections.text = cnx
+    $CanvasLayer/Panel/LabelConnections.text = cnx
 
 func _disconnected(id, was_clean = false):
     # This is called when a client disconnects, "id" will be the one of the
     # disconnecting client, "was_clean" will tell you if the disconnection
     # was correctly notified by the remote peer before closing the socket.
     var cnx = "Client %d disconnected, clean: %s" % [id, str(was_clean)]
-    $Panel/LabelConnections.text = cnx
+    $CanvasLayer/Panel/LabelConnections.text = cnx
     if id in clients:
-        $Panel/MessageLog.text += clients[id].playername + ' has left the server.\n'
+        $CanvasLayer/Panel/MessageLog.text += clients[id].playername + ' has left the server.\n'
         remove_child(clients[id])
         clients.erase(id)
         players.remove(players.find(id))
         arrange_musicians()
-    $Panel/MessageLog.scroll_vertical=INF
+    $CanvasLayer/Panel/MessageLog.scroll_vertical=INF
 
 #Returns the id of the next muso in the circle. If last, returns first.
 func get_adjacent(id):
@@ -110,20 +105,20 @@ func _on_data(id):
     var pkt = _server.get_peer(id).get_packet()
     var incoming = pkt.get_string_from_utf8()
     var message = 'kay'
-    $Panel/LabelStatus.text = incoming
+    $CanvasLayer/Panel/LabelStatus.text = incoming
     print("Got data from client %d: %s ... echoing" % [id, pkt.get_string_from_utf8()])
     #_server.get_peer(id).put_packet(pkt)
     if incoming.begins_with('||:'):
         clients[id] = create_musician(incoming.right(3), 'Violin', id)
         players.append(id)
         arrange_musicians()
-        $Panel/MessageLog.text += incoming.right(3) + ' has entered the server.\n'
-        $Panel/MessageLog.scroll_vertical=INF
+        $CanvasLayer/Panel/MessageLog.text += incoming.right(3) + ' has entered the server.\n'
+        $CanvasLayer/Panel/MessageLog.scroll_vertical=INF
         message = '||:' + str(id)
     else:
         if id in clients:
-            $Panel/MessageLog.text += clients[id].playername + ': ' + incoming + "\n"
-            $Panel/MessageLog.scroll_vertical=INF
+            $CanvasLayer/Panel/MessageLog.text += clients[id].playername + ': ' + incoming + "\n"
+            $CanvasLayer/Panel/MessageLog.scroll_vertical=INF
         else:
             incoming = ''
     if incoming:
@@ -132,7 +127,7 @@ func _on_data(id):
             var align_value = int(incoming.right(6))
             #Should pass id so boss can calculate resonance/harmonics
             var align_done = $ChestralBoss.realign(align_value)
-            $Panel/MessageLog.text += clients[id].playername + ' aligned: ' + str(align_done) + '\n'
+            $CanvasLayer/Panel/MessageLog.text += clients[id].playername + ' aligned: ' + str(align_done) + '\n'
         elif incoming.begins_with('aligm|'):
             var align_value = incoming.right(6)
             align_value = align_value.split('x')
@@ -163,7 +158,7 @@ func _on_data(id):
         elif incoming.begins_with('maest|'):
             send_all_client_data(id)
 
-        $Panel/MessageLog.scroll_vertical=INF
+        $CanvasLayer/Panel/MessageLog.scroll_vertical=INF
 
 func _process(delta):
     # Call this in _process or _physics_process.
