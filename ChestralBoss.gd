@@ -1,5 +1,5 @@
+#Bird art from: https://opengameart.org/content/colorful-bird-flying-animation
 extends Node2D
-
 
 export (int) var misalignment = 10000
 export (int) var base_dissonance = 20
