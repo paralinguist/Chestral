@@ -8,7 +8,8 @@ name = 'Me Except Arduino'
 #This will vary based on OS and hardware.
 #"Universal" Serial Bus indeed
 #serial_address = "/dev/tty.usbmodem14102"
-serial_address = 'COM6'
+#serial_address = 'COM6'
+serial_address = '/dev/cu.usbmodem1101'
 baud = 115200
 
 device = serial.Serial(serial_address)
