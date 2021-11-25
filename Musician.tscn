@@ -1,7 +1,19 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://Musician.gd" type="Script" id=1]
 [ext_resource path="res://sprites/Instruments/violin.png" type="Texture" id=2]
+[ext_resource path="res://sprites/Speech/Stick.png" type="Texture" id=3]
+[ext_resource path="res://sprites/Speech/Bubble.png" type="Texture" id=4]
+[ext_resource path="res://ui_assets/FugazOne-Regular.ttf" type="DynamicFontData" id=5]
+[ext_resource path="res://Speech.gd" type="Script" id=6]
+
+[sub_resource type="DynamicFont" id=12]
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 5 )
+
+[sub_resource type="Theme" id=13]
+default_font = SubResource( 12 )
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.0784314, 0.937255, 0.329412, 1 )
@@ -21,6 +33,58 @@ bg_color = Color( 1, 1, 1, 1 )
 [sub_resource type="StyleBoxFlat" id=5]
 bg_color = Color( 0.803922, 0.305882, 0.905882, 1 )
 
+[sub_resource type="DynamicFont" id=9]
+size = 156
+extra_spacing_char = -6
+font_data = ExtResource( 5 )
+
+[sub_resource type="Animation" id=10]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Speech:scale:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 0.2, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("Speech:modulate:a")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 1, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
+
+[sub_resource type="Animation" id=11]
+resource_name = "Speech"
+length = 4.5
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Speech:scale:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 1e-05, -0.25, 0, 0.25, 0, 0.2, -0.25, 0, 0.25, 0, 0.2, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.5, 4, 4.5 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("Speech:modulate:a")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0, 1, -0.25, 0, 0.25, 0, 1, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.4, 4.1, 4.5 )
+}
+
 [node name="Musician" type="Node2D"]
 position = Vector2( 400, 400 )
 script = ExtResource( 1 )
@@ -35,6 +99,7 @@ anchor_right = 0.5
 margin_left = -154.0
 margin_right = 154.0
 margin_bottom = 86.0
+theme = SubResource( 13 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -159,7 +224,7 @@ __meta__ = {
 [node name="Label" type="Label" parent="UI"]
 margin_top = 72.0
 margin_right = 308.0
-margin_bottom = 86.0
+margin_bottom = 96.0
 text = "Muso"
 align = 1
 __meta__ = {
@@ -187,6 +252,41 @@ wait_time = 0.5
 one_shot = true
 
 [node name="HurtShake" type="Tween" parent="."]
+
+[node name="Speech" type="Sprite" parent="."]
+position = Vector2( 47, -125 )
+scale = Vector2( 0.2, 0.2 )
+z_index = 4
+texture = ExtResource( 3 )
+offset = Vector2( 80, -80 )
+flip_h = true
+script = ExtResource( 6 )
+
+[node name="Bubble" type="Sprite" parent="Speech"]
+position = Vector2( -50, -35 )
+texture = ExtResource( 4 )
+offset = Vector2( 549, -379 )
+
+[node name="Words" type="Label" parent="Speech/Bubble"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -794.0
+margin_bottom = -794.0
+rect_min_size = Vector2( 1098, 794 )
+rect_scale = Vector2( 0.8, 0.8 )
+rect_pivot_offset = Vector2( 549, 397 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 9 )
+align = 1
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 10 )
+anims/Speech = SubResource( 11 )
 
 [connection signal="timeout" from="IntTimer" to="." method="_on_IntTimer_timeout"]
 [connection signal="timeout" from="HarmonicsTimer" to="." method="_on_HarmonicsTimer_timeout"]

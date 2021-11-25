@@ -25,7 +25,7 @@ func arrange_musicians():
         var client = clients[client_id]
         var angle = count * (TAU/sides) - TAU/4
         var new_position = center + radius * Vector2(cos(angle), sin(angle)*0.65)
-        client.reposition(new_position.x, new_position.y)
+        client.reposition(new_position.x, new_position.y, angle)
         count += 1
 
 func create_musician(name, instrument, id):
