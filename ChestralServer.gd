@@ -8,7 +8,6 @@ const PORT = 8765
 var _server = WebSocketServer.new()
 
 var clients = {}
-
 var players = []
 
 var Musician = load("res://Musician.tscn")
@@ -25,7 +24,7 @@ func arrange_musicians():
         var client = clients[client_id]
         var angle = count * (TAU/sides) - TAU/4
         var new_position = center + radius * Vector2(cos(angle), sin(angle)*0.65)
-        client.reposition(new_position.x, new_position.y)
+        client.reposition(new_position.x, new_position.y, angle)
         count += 1
 
 func create_musician(name, instrument, id):
@@ -109,12 +108,15 @@ func _on_data(id):
     print("Got data from client %d: %s ... echoing" % [id, pkt.get_string_from_utf8()])
     #_server.get_peer(id).put_packet(pkt)
     if incoming.begins_with('||:'):
-        clients[id] = create_musician(incoming.right(3), 'Violin', id)
-        players.append(id)
-        arrange_musicians()
-        $CanvasLayer/Panel/MessageLog.text += incoming.right(3) + ' has entered the server.\n'
-        $CanvasLayer/Panel/MessageLog.scroll_vertical=INF
-        message = '||:' + str(id)
+        if clients.has(id):
+            clients[id].rename(incoming.right(3))
+        else:
+            clients[id] = create_musician(incoming.right(3), 'Violin', id)
+            players.append(id)
+            arrange_musicians()
+            $CanvasLayer/Panel/MessageLog.text += incoming.right(3) + ' has entered the server.\n'
+            $CanvasLayer/Panel/MessageLog.scroll_vertical=INF
+            message = '||:' + str(id)
     else:
         if id in clients:
             $CanvasLayer/Panel/MessageLog.text += clients[id].playername + ': ' + incoming + "\n"

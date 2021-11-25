@@ -19,9 +19,19 @@ func _ready():
     $Sprite.scale = Vector2(0.5,0.5)
     $Sprite.position.y -= 80
 
-func reposition(new_x,new_y):
+func reposition(new_x,new_y, angle):
     self.position.x = new_x
     self.position.y = new_y
+    if new_y < 300:
+        $Speech.rotation = TAU/4
+    else:
+        $Speech.rotation = 0
+#    $Speech.rotation = min(abs(angle), PI-abs(angle))/2
+    if angle > TAU/4:
+        $Speech.scale.x = -0.2
+        $Speech.rotation *= -1
+    else:
+        $Speech.scale.x = 0.2
 
 #directly changes interference + label bar
 func set_interference(inter_value, additive):
@@ -100,9 +110,10 @@ func apply_soothe(soothe_value, instant):
         set_soothe(soothe_value, true)
         $SootheTimer.start()
     
-func train(name, instrument, id):
-    playername = name
-    $UI/Label.text = name
+func train(new_name, instrument, id):
+    name = new_name
+    playername = new_name
+    $UI/Label.text = new_name
     connection_id = id
     image = load("res://Sprites/Instruments/sax.png")
     if instrument == 'Violin':
@@ -110,6 +121,7 @@ func train(name, instrument, id):
         base_align = 10
         image = load("res://Sprites/Instruments/violin.png")  
     $Sprite.texture = image
+    talk("Hi I am " + playername + " and I play the " + instrument)
 
 func set_avatar(filename):
     var avatar_file = 'res://Sprites/Orcs/' + filename
@@ -204,3 +216,14 @@ func start_hurt_shake():
 
 func _on_HurtShake_tween_completed(object, key):
     start_hurt_shake()
+
+
+func talk(words: String):
+    $Speech/Bubble/Words.text = words
+    $AnimationPlayer.play("Speech")
+
+func rename(new_name: String):
+    playername = new_name
+    $UI/Label.text = new_name
+    talk("Hi I am " + playername + " now")
+    name = new_name

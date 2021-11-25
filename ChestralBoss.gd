@@ -10,6 +10,7 @@ export (int) var base_interference = 30
 func _ready():
     $ProgressBar.max_value = misalignment
     $ProgressBar.value = misalignment
+    talk("SCRAWWKKKK")
     
 func realign(align_value):
     interference = interference - align_value
@@ -32,9 +33,14 @@ func get_position():
     var angle = TAU * ($CircleTimer.time_left/$CircleTimer.wait_time)
     var new_position = center + radius * Vector2(cos(angle), sin(angle)*0.65)
     if sin(angle) < 0:
-        scale.x = 1
+        $Sprite.scale.x = 1
+        $Speech.scale.x = -0.2
+        $Speech.position.x = -136
     else:
-        scale.x = -1
+        $Sprite.scale.x = -1
+        $Speech.scale.x = 0.2
+        $Speech.position.x = 136
+    $Speech/Bubble/Words.rect_scale.x = -$Sprite.scale.x
     return new_position
 
 
@@ -45,3 +51,6 @@ func _on_Timer_timeout():
 #    else:
 #        $Sprite.animation = "Idle"
 
+func talk(words: String):
+    $Speech/Bubble/Words.text = words
+    $AnimationPlayer.play("Speech")
