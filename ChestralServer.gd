@@ -8,7 +8,6 @@ const PORT = 8765
 var _server = WebSocketServer.new()
 
 var clients = {}
-
 var players = []
 
 var Musician = load("res://Musician.tscn")
@@ -109,12 +108,15 @@ func _on_data(id):
     print("Got data from client %d: %s ... echoing" % [id, pkt.get_string_from_utf8()])
     #_server.get_peer(id).put_packet(pkt)
     if incoming.begins_with('||:'):
-        clients[id] = create_musician(incoming.right(3), 'Violin', id)
-        players.append(id)
-        arrange_musicians()
-        $CanvasLayer/Panel/MessageLog.text += incoming.right(3) + ' has entered the server.\n'
-        $CanvasLayer/Panel/MessageLog.scroll_vertical=INF
-        message = '||:' + str(id)
+        if clients.has(id):
+            clients[id].rename(incoming.right(3))
+        else:
+            clients[id] = create_musician(incoming.right(3), 'Violin', id)
+            players.append(id)
+            arrange_musicians()
+            $CanvasLayer/Panel/MessageLog.text += incoming.right(3) + ' has entered the server.\n'
+            $CanvasLayer/Panel/MessageLog.scroll_vertical=INF
+            message = '||:' + str(id)
     else:
         if id in clients:
             $CanvasLayer/Panel/MessageLog.text += clients[id].playername + ': ' + incoming + "\n"

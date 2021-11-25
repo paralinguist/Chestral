@@ -110,9 +110,10 @@ func apply_soothe(soothe_value, instant):
         set_soothe(soothe_value, true)
         $SootheTimer.start()
     
-func train(name, instrument, id):
-    playername = name
-    $UI/Label.text = name
+func train(new_name, instrument, id):
+    name = new_name
+    playername = new_name
+    $UI/Label.text = new_name
     connection_id = id
     image = load("res://Sprites/Instruments/sax.png")
     if instrument == 'Violin':
@@ -220,3 +221,9 @@ func _on_HurtShake_tween_completed(object, key):
 func talk(words: String):
     $Speech/Bubble/Words.text = words
     $AnimationPlayer.play("Speech")
+
+func rename(new_name: String):
+    playername = new_name
+    $UI/Label.text = new_name
+    talk("Hi I am " + playername + " now")
+    name = new_name
