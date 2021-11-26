@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=2]
+[gd_scene load_steps=45 format=2]
 
 [ext_resource path="res://ChestralBoss.gd" type="Script" id=1]
 [ext_resource path="res://sprites/Bird/BirdFly_000.png" type="Texture" id=2]
@@ -58,6 +58,21 @@ size = 156
 extra_spacing_char = -6
 font_data = ExtResource( 34 )
 
+[sub_resource type="Animation" id=12]
+resource_name = "Alignment"
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 0.368627, 1, 0.168627, 0.694118 ), Color( 1, 1, 1, 1 ) ]
+}
+
 [sub_resource type="Animation" id=10]
 length = 0.001
 tracks/0/type = "bezier"
@@ -80,8 +95,94 @@ tracks/1/keys = {
 "points": PoolRealArray( 1, -0.25, 0, 0.25, 0 ),
 "times": PoolRealArray( 0 )
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath("Sprite:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
 
 [sub_resource type="Animation" id=11]
+resource_name = "Speech"
+length = 4.5
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Speech:scale:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 1e-05, -0.25, 0, 0.25, 0, 0.2, -0.25, 0, 0.25, 0, 0.2, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.5, 4, 4.5 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("Speech:modulate:a")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0, 1, -0.25, 0, 0.25, 0, 1, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.4, 4.1, 4.5 )
+}
+
+[sub_resource type="Animation" id=13]
+resource_name = "Alignment"
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 0.368627, 1, 0.168627, 0.694118 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=14]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Speech:scale:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 0.2, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("Speech:modulate:a")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 1, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Sprite:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=15]
 resource_name = "Speech"
 length = 4.5
 tracks/0/type = "bezier"
@@ -112,7 +213,7 @@ script = ExtResource( 1 )
 scale = Vector2( -1, 1 )
 frames = SubResource( 3 )
 animation = "Flap"
-frame = 1
+frame = 16
 playing = true
 
 [node name="ProgressBar" type="ProgressBar" parent="."]
@@ -167,7 +268,15 @@ __meta__ = {
 }
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Alignment = SubResource( 12 )
 anims/RESET = SubResource( 10 )
 anims/Speech = SubResource( 11 )
+
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="."]
+anims/Alignment = SubResource( 13 )
+anims/RESET = SubResource( 14 )
+anims/Speech = SubResource( 15 )
+
+[node name="Tween" type="Tween" parent="."]
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

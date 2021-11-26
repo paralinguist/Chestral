@@ -14,6 +14,15 @@ var Musician = load("res://Musician.tscn")
 
 var rng : RandomNumberGenerator = RandomNumberGenerator.new()
 
+
+const WAITING: int = 0
+const IN_PROGRESS: int = 1
+const ENDED_FAIL: int = 2
+const ENDED_WIN: int = 3
+
+
+var state: int = 0
+
 #Some weird magic numbers in here - need to lock down the polygon geometry
 func arrange_musicians():
     var radius = 500
@@ -110,7 +119,7 @@ func _on_data(id):
     if incoming.begins_with('||:'):
         if clients.has(id):
             clients[id].rename(incoming.right(3))
-        else:
+        elif state != 1:
             clients[id] = create_musician(incoming.right(3), 'Violin', id)
             players.append(id)
             arrange_musicians()
@@ -123,7 +132,10 @@ func _on_data(id):
             $CanvasLayer/Panel/MessageLog.scroll_vertical=INF
         else:
             incoming = ''
-    if incoming:
+    if state == WAITING and incoming:
+        if incoming.begins_with('start|'):
+            state = IN_PROGRESS
+    if incoming and state == IN_PROGRESS:
         _server.get_peer(id).put_packet(message.to_utf8())
         if incoming.begins_with('align|'):
             var align_value = int(incoming.right(6))
@@ -175,9 +187,11 @@ func _on_ServerDataPulse_timeout():
 
 #Debugging tools
 func _on_Button_pressed():
-    var victim = clients[players[randi() % players.size()]]
-    var dissonance = rng.randi_range(10,50)
-    print('Squarked at ' + victim.playername + ' for: ' + str(victim.irritate(dissonance)))
+    if state == WAITING:
+        var victim = clients[players[randi() % players.size()]]
+        var dissonance = rng.randi_range(10,50)
+        print('Squarked at ' + victim.playername + ' for: ' + str(victim.irritate(dissonance)))
 
 func _on_Unbalance_pressed():
-    $ChestralBoss.misalignment += 500
+    state = IN_PROGRESS
+    $ChestralBoss.realign(2000)

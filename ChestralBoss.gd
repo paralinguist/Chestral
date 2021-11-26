@@ -19,13 +19,24 @@ func realign(align_value):
         misalignment = misalignment + interference
         damage_done = interference
         interference = 0
-    #Should probably play some flappy animation?
+    #Should probably play some flappy animation?  - OK
+    $AnimationPlayer2.play("Alignment")
+    if misalignment <= 0:
+        get_parent().state = get_parent().ENDED_WIN
+        $Tween.interpolate_property(self, "position", position, Vector2(2400, -400), 5, Tween.TRANS_CIRC, Tween.EASE_IN)
+        $Tween.start()
+        scale.x = 1
     return damage_done
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
     $ProgressBar.value = misalignment
-    position = get_position()
+    if get_parent().state == 1:    
+#        position =  get_position()
+        position = lerp(position, get_position(), 0.02)
+        $Sprite.animation == "Flap"
+    elif get_parent().state == 0:
+        $Sprite.animation == "Idle"
 
 func get_position():
     var radius = 240

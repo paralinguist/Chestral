@@ -8,6 +8,7 @@ sooth|<int>
 sooae|<int>
 reson|<int>
 harmo|<int>
+start|
 
 align - check for harmonics or resonance and then deal damage
 aligm - check for harmonics or resonance then deal int damage int times
