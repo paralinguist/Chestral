@@ -169,6 +169,8 @@ func _on_data(id):
                 clients[client].apply_soothe(soothe_value, true)
         elif incoming.begins_with('avata|'):
             clients[id].set_avatar(incoming.right(6))
+        elif incoming.begins_with('speak|'):
+            clients[id].talk(incoming.right(6))
         elif incoming.begins_with('maest|'):
             send_all_client_data(id)
 
