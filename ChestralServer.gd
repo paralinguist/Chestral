@@ -132,9 +132,13 @@ func _on_data(id):
             $CanvasLayer/Panel/MessageLog.scroll_vertical=INF
         else:
             incoming = ''
+    if incoming.begins_with('speak|'):
+            clients[id].talk(incoming.right(6))
     if state == WAITING and incoming:
         if incoming.begins_with('start|'):
             state = IN_PROGRESS
+        elif incoming.begins_with('avata|'):
+            clients[id].set_avatar(incoming.right(6))
     if incoming and state == IN_PROGRESS:
         _server.get_peer(id).put_packet(message.to_utf8())
         if incoming.begins_with('align|'):
@@ -167,10 +171,6 @@ func _on_data(id):
             var soothe_value = int(incoming.right(6))
             for client in clients:
                 clients[client].apply_soothe(soothe_value, true)
-        elif incoming.begins_with('avata|'):
-            clients[id].set_avatar(incoming.right(6))
-        elif incoming.begins_with('speak|'):
-            clients[id].talk(incoming.right(6))
         elif incoming.begins_with('maest|'):
             send_all_client_data(id)
 
@@ -181,7 +181,6 @@ func _process(delta):
     # Data transfer, and signals emission will only happen when calling this function.
     _server.poll()
 
-
 func _on_ServerDataPulse_timeout():
     for client in clients:
         var client_state = 'state|' + JSON.print(clients[client].get_state())
@@ -189,11 +188,12 @@ func _on_ServerDataPulse_timeout():
 
 #Debugging tools
 func _on_Button_pressed():
-    if state == WAITING:
+    if state == IN_PROGRESS:
         var victim = clients[players[randi() % players.size()]]
         var dissonance = rng.randi_range(10,50)
         print('Squarked at ' + victim.playername + ' for: ' + str(victim.irritate(dissonance)))
 
 func _on_Unbalance_pressed():
     state = IN_PROGRESS
-    $ChestralBoss.realign(2000)
+    #This is to test keeping the boss in the game
+    $ChestralBoss.realign(-2000)
