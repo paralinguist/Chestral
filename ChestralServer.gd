@@ -59,7 +59,6 @@ func _ready():
         print("Unable to start server")
         set_process(false)
     $CanvasLayer/Panel/LabelIPs.text = 'Server IP/s: '
-    var ip
     for address in IP.get_local_addresses():
         if (address.split('.').size() == 4) and not (address.begins_with('169') or address.begins_with('127')):
             $CanvasLayer/Panel/LabelIPs.text += ' ( ' + address + ' ) '
@@ -114,7 +113,7 @@ func perform_alignments(align, times, id):
     align = align + client.harmonics
     client.set_harmonics(0, false)
     var align_effect = 0
-    for i in range(times):
+    for _i in range(times):
         align_effect = $ChestralBoss.realign(align)
         $CanvasLayer/Panel/MessageLog.text += clients[id].playername + ' aligned: ' + str(align_effect) + '\n'
 
@@ -167,25 +166,50 @@ func _on_data(id):
             #Should animate music notes here - from player to boss
         elif incoming.begins_with('inter|'):
             var inter_value = int(incoming.right(6))
-            clients[id].apply_int(inter_value)
+            clients[id].set_interference(inter_value)
         elif incoming.begins_with('adjin|'):
             var inter_value = int(incoming.right(6))
-            clients[get_adjacent(id)].apply_int(inter_value)
+            clients[get_adjacent(id)].set_interference(inter_value)
         elif incoming.begins_with('sooth|'):
             var soothe_value = int(incoming.right(6))
-            clients[get_adjacent(id)].apply_soothe(soothe_value, false)
+            clients[get_adjacent(id)].set_soothe(soothe_value)
         elif incoming.begins_with('reson|'):
             var reson_value = int(incoming.right(6))
-            clients[get_adjacent(id)].apply_resonance(reson_value)
+            clients[get_adjacent(id)].set_resonance(reson_value)
         elif incoming.begins_with('harmo|'):
             var harmo_value = int(incoming.right(6))
-            clients[get_adjacent(id)].apply_harmonics(harmo_value)
+            clients[get_adjacent(id)].set_harmonics(harmo_value)
         elif incoming.begins_with('sooae|'):
             var soothe_value = int(incoming.right(6))
             for client in clients:
-                clients[client].apply_soothe(soothe_value, true)
+                clients[client].set_soothe(soothe_value, false, false, true)
         elif incoming.begins_with('maest|'):
             send_all_client_data(id)
+        elif incoming.begins_with('sh') and incoming[5] == '|':
+            var command = incoming.left(5)
+            var ids = incoming.right(6)
+            ids = ids.split('|')
+            if len(ids) == 2:
+                var source = clients[int(ids[0])]
+                var destination = clients[int(ids[1])]
+                if command == 'shint':
+                    var interference = source.interference
+                    source.set_interference(0, false)
+                    destination.set_interference(interference, true)
+                elif command == 'shsoo':
+                    var soothe = source.soothe
+                    source.set_soothe(0, false)
+                    destination.set_soothe(soothe, true)
+                elif command == 'shres':
+                    var resonance = source.resonance
+                    source.set_resonance(0, false)
+                    destination.set_resonance(resonance, true)
+                elif command == 'shhar':
+                    var harmonics = source.harmonics
+                    source.set_harmonics(0, false)
+                    destination.set_harmonics(harmonics, true)
+            else:
+                $CanvasLayer/Panel/LabelStatus.text = 'Improper Maestro shift command'
 
         $CanvasLayer/Panel/MessageLog.scroll_vertical=INF
 

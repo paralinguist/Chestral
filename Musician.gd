@@ -34,81 +34,65 @@ func reposition(new_x,new_y, angle):
         $Speech.scale.x = 0.2
 
 #directly changes interference + label bar
-func set_interference(inter_value, additive):
+func set_interference(inter_value, additive=true, timer=true):
     if additive:
         interference = interference + inter_value
-        if interference <= 0:
-            interference = 0
-        else:
-            $UI/Interference/InterferenceLabel.visible = true
-            $UI/Interference.visible = true
     else:
         interference = inter_value
+    if timer:
+        $IntTimer.start()
+    if interference <= 0:
+            interference = 0
+            $IntTimer.stop()
+            $UI/Interference.value = 0
     $UI/Interference/InterferenceLabel.text = str(interference)
 
 #directly changes harmonics + label bar
-func set_harmonics(harmonics_value, additive):
+func set_harmonics(harmonics_value, additive=true, timer=true):
     if additive:
         harmonics = harmonics + harmonics_value
-        if harmonics <= 0:
-            harmonics = 0
-        else:
-            $UI/HBox/Harmonics/HarmonicsLabel.visible = true
-            $UI/HBox/Harmonics.visible = true
     else:
         harmonics = harmonics_value
+    if timer:
+        $HarmonicsTimer.start()
+    if harmonics <= 0:
+            harmonics = 0
+            $HarmonicsTimer.stop()
+            $UI/HBox/Harmonics.value = 0
     $UI/HBox/Harmonics/HarmonicsLabel.text = str(harmonics)
 
 #directly changes resonance + label bar
-func set_resonance(resonance_value, additive):
+func set_resonance(resonance_value, additive=true, timer=true):
     if additive:
         resonance = resonance + resonance_value
-        if resonance <= 0:
-            resonance = 0
-        else:
-            $UI/HBox/Resonance/ResonanceLabel.visible = true
-            $UI/HBox/Resonance.visible = true
     else:
         resonance = resonance_value
+    if timer:
+        $ResonanceTimer.start()
+    if resonance <= 0:
+        resonance = 0
+        $ResonanceTimer.stop()
+        $UI/HBox/Resonance.value = 0
     $UI/HBox/Resonance/ResonanceLabel.text = str(resonance)
 
-#Applies interference with a timer
-func apply_int(inter_value):
-    set_interference(inter_value, true)
-    $IntTimer.start()
-
-#Applies harmonics with a timer
-func apply_harmonics(harmonics_value):
-    set_harmonics(harmonics_value, true)
-    $HarmonicsTimer.start()
-    
-#Applies resonance with a timer
-func apply_resonance(resonance_value):
-    set_resonance(resonance_value, true)
-    $ResonanceTimer.start()
-
 #directly changes soothe + label bar
-func set_soothe(soothe_value, additive):
-    if additive:
-        soothe = soothe + soothe_value
-        if soothe <= 0:
-            soothe = 0
-        else:
-            $UI/Soothe/SootheLabel.visible = true
-            $UI/Soothe.visible = true
-    else:
-        soothe = soothe_value
-    $UI/Soothe/SootheLabel.text = str(soothe)
-
-#Apply an int of soothe to muso - instant is a bool, is this instant or applied on timer?
-func apply_soothe(soothe_value, instant):
+func set_soothe(soothe_value, additive=true, timer=true, instant=false):
     if instant:
         current_irritation = current_irritation - soothe_value
         if current_irritation < 0:
             current_irritation = 0
     else:
-        set_soothe(soothe_value, true)
-        $SootheTimer.start()
+        if additive:
+            soothe = soothe + soothe_value        
+        else:
+            soothe = soothe_value
+        if timer:
+            $SootheTimer.start()
+        if soothe <= 0:
+                soothe = 0
+                $SootheTimer.stop()
+                $UI/Soothe.value = 0
+        $UI/Soothe/SootheLabel.text = str(soothe)
     
 func train(new_name, instrument, id):
     name = new_name

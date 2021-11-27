@@ -38,3 +38,10 @@ func _connected(protocol: String) -> void:
 
 func _on_Button_pressed():
     client.get_peer(1).put_packet('||:GodotKid'.to_utf8())
+
+
+func _on_Button2_pressed():
+    var command = $Panel/command.text + '|' + $Panel/source.text
+    if $Panel/destination.text:
+        command += '|' + $Panel/destination.text
+    client.get_peer(1).put_packet(command.to_utf8())
