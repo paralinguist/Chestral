@@ -105,7 +105,18 @@ func send_all_client_data(id):
         client_states[client] = clients[client].get_state()
     var client_states_string = 'allcli|' + JSON.print(client_states)
     _server.get_peer(id).put_packet(client_states_string.to_utf8())
-        
+
+#Consumes buffs, applies them to the alignment or alignment multi and sends through to the boss
+func perform_alignments(align, times, id):
+    var client = clients[id]
+    align = align + int((float(client.resonance) / 100.00 * align))
+    client.set_resonance(0, false)
+    align = align + client.harmonics
+    client.set_harmonics(0, false)
+    var align_effect = 0
+    for i in range(times):
+        align_effect = $ChestralBoss.realign(align)
+        $CanvasLayer/Panel/MessageLog.text += clients[id].playername + ' aligned: ' + str(align_effect) + '\n'
 
 func _on_data(id):
     # Print the received packet, you MUST always use get_peer(id).get_packet to receive data,
@@ -143,15 +154,17 @@ func _on_data(id):
         _server.get_peer(id).put_packet(message.to_utf8())
         if incoming.begins_with('align|'):
             var align_value = int(incoming.right(6))
-            #Should pass id so boss can calculate resonance/harmonics
-            var align_done = $ChestralBoss.realign(align_value)
-            $CanvasLayer/Panel/MessageLog.text += clients[id].playername + ' aligned: ' + str(align_done) + '\n'
+            perform_alignments(align_value, 1, id)
         elif incoming.begins_with('aligm|'):
             var align_value = incoming.right(6)
             align_value = align_value.split('x')
-            var align_mag = align_value[0]
-            var times = align_value[1]
-            var align_done = $ChestralBoss.realign(align_mag, times)
+            if len(align_value) == 2:
+                var align_mag = int(align_value[0])
+                var times = int(align_value[1])
+                perform_alignments(align_mag,times,id)
+            else:
+                $CanvasLayer/Panel/LabelStatus.text = 'Incorrect align multi command'
+            #Should animate music notes here - from player to boss
         elif incoming.begins_with('inter|'):
             var inter_value = int(incoming.right(6))
             clients[id].apply_int(inter_value)

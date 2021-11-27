@@ -19,7 +19,6 @@ func realign(align_value):
         misalignment = misalignment + interference
         damage_done = interference
         interference = 0
-    #Should probably play some flappy animation?  - OK
     $AnimationPlayer2.play("Alignment")
     if misalignment <= 0:
         get_parent().state = get_parent().ENDED_WIN
@@ -28,11 +27,9 @@ func realign(align_value):
         scale.x = 1
     return damage_done
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
     $ProgressBar.value = misalignment
     if get_parent().state == 1:    
-#        position =  get_position()
         position = lerp(position, get_position(), 0.02)
         $Sprite.animation == "Flap"
     elif get_parent().state == 0:

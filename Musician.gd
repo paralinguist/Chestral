@@ -136,20 +136,6 @@ func _process(delta):
     $UI/Interference.value = $IntTimer.time_left
     $UI/HBox/Harmonics.value = $HarmonicsTimer.time_left
     $UI/HBox/Resonance.value = $ResonanceTimer.time_left
-#    Commented this out so the UI is aligned correctly
-#    if soothe <= 0:
-#        $UI/Soothe/SootheLabel.visible = false
-#        $UI/Soothe.visible = false
-#    if interference <= 0:
-#        $UI/Interference/InterferenceLabel.visible = false
-#        $UI/Interference.visible = false
-#    if harmonics <= 0:
-#        $UI/HBox/Harmonics/HarmonicsLabel.visible = false
-#        $UI/HBox/Harmonics.visible = false
-#    if resonance <= 0:
-#        $UI/HBox/Resonance/ResonanceLabel.visible = false
-#        $UI/HBox/Resonance.visible = false
-        
     $UI/HBox/Irritation.value = current_irritation
     #Need to check for "dead" player here and handle
 
@@ -196,9 +182,7 @@ func irritate(dissonance):
         $Sprite.modulate = Color(1,0.5,0.5)
         start_hurt_shake()
         $HurtTimer.start()
-    #Should animate over this muso to show they got annoyed
     return damage_done
-
 
 func _on_HurtTimer_timeout():
     $Sprite.modulate = Color(1,1,1)
@@ -213,10 +197,8 @@ func start_hurt_shake():
     $HurtShake.interpolate_property($Sprite, "offset", $Sprite.offset, shake_distance, 0.05, Tween.TRANS_SINE)
     $HurtShake.start()
 
-
 func _on_HurtShake_tween_completed(object, key):
     start_hurt_shake()
-
 
 func talk(words: String):
     $Speech/Bubble/Words.text = words
