@@ -1,5 +1,9 @@
 protocol:
 
+||:<str>
+avata|<filename>
+speak|<str>
+
 align|<int>
 aligm|<int>x<int>
 inter|<int>
