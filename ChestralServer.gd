@@ -124,7 +124,7 @@ func _on_data(id):
     var incoming = pkt.get_string_from_utf8()
     var message = 'kay'
     $CanvasLayer/Panel/LabelStatus.text = incoming
-    print("Got data from client %d: %s ... echoing" % [id, pkt.get_string_from_utf8()])
+    #print("Got data from client %d: %s ... echoing" % [id, pkt.get_string_from_utf8()])
     #_server.get_peer(id).put_packet(pkt)
     if incoming.begins_with('||:'):
         if clients.has(id):
@@ -234,3 +234,12 @@ func _on_Unbalance_pressed():
     state = IN_PROGRESS
     #This is to test keeping the boss in the game
     $ChestralBoss.realign(-2000)
+    $AttackTimer.start()
+
+
+func _on_AttackTimer_timeout():
+    if state == IN_PROGRESS:
+        var victim = clients[players[randi() % players.size()]]
+        var dissonance = rng.randi_range(10,50)
+        $ChestralBoss.talk(victim.playername + ' CAW CAW!')
+        print('Squarked at ' + victim.playername + ' for: ' + str(victim.irritate(dissonance))) 
