@@ -34,6 +34,11 @@ func _process(delta):
         $Sprite.animation == "Flap"
     elif get_parent().state == 0:
         $Sprite.animation == "Idle"
+    if interference > 0:
+        $Sprite/ShieldSprite.visible = true
+        $Sprite/ShieldSprite.modulate = Color(1,1,1,float(interference)/100.0)
+    else:
+        $Sprite/ShieldSprite.visible = false
 
 func get_position():
     var radius = 240
@@ -51,14 +56,10 @@ func get_position():
     $Speech/Bubble/Words.rect_scale.x = -$Sprite.scale.x
     return new_position
 
-
-func _on_Timer_timeout():
-    pass
-#    if $Sprite.animation == "Idle":
-#        $Sprite.animation = "Flap"
-#    else:
-#        $Sprite.animation = "Idle"
-
 func talk(words: String):
     $Speech/Bubble/Words.text = words
     $AnimationPlayer.play("Speech")
+
+func _on_InterferenceTimer_timeout():
+    interference = 0
+    print('clearing boss int')

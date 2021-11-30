@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=2]
+[gd_scene load_steps=46 format=2]
 
 [ext_resource path="res://ChestralBoss.gd" type="Script" id=1]
 [ext_resource path="res://sprites/Bird/BirdFly_000.png" type="Texture" id=2]
@@ -34,6 +34,7 @@
 [ext_resource path="res://sprites/Speech/Stick.png" type="Texture" id=32]
 [ext_resource path="res://sprites/Speech/Bubble.png" type="Texture" id=33]
 [ext_resource path="res://ui_assets/FugazOne-Regular.ttf" type="DynamicFontData" id=34]
+[ext_resource path="res://sprites/Bird/shield.png" type="Texture" id=35]
 
 [sub_resource type="SpriteFrames" id=3]
 animations = [ {
@@ -213,8 +214,12 @@ script = ExtResource( 1 )
 scale = Vector2( -1, 1 )
 frames = SubResource( 3 )
 animation = "Flap"
-frame = 16
+frame = 17
 playing = true
+
+[node name="ShieldSprite" type="Sprite" parent="Sprite"]
+modulate = Color( 1, 1, 1, 0 )
+texture = ExtResource( 35 )
 
 [node name="ProgressBar" type="ProgressBar" parent="."]
 margin_left = -99.0
@@ -228,10 +233,6 @@ percent_visible = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="Timer" type="Timer" parent="."]
-wait_time = 3.0
-autostart = true
 
 [node name="CircleTimer" type="Timer" parent="."]
 wait_time = 12.0
@@ -279,4 +280,7 @@ anims/Speech = SubResource( 15 )
 
 [node name="Tween" type="Tween" parent="."]
 
-[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[node name="InterferenceTimer" type="Timer" parent="."]
+wait_time = 15.0
+
+[connection signal="timeout" from="InterferenceTimer" to="." method="_on_InterferenceTimer_timeout"]

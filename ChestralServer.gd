@@ -20,6 +20,9 @@ const IN_PROGRESS: int = 1
 const ENDED_FAIL: int = 2
 const ENDED_WIN: int = 3
 
+var telegraphed = false
+var tele_target = null
+var tele_irritation = 200
 
 var state: int = 0
 
@@ -233,13 +236,35 @@ func _on_Button_pressed():
 func _on_Unbalance_pressed():
     state = IN_PROGRESS
     #This is to test keeping the boss in the game
-    $ChestralBoss.realign(-2000)
     $AttackTimer.start()
+    $InterferenceTimer.start()
+    $TelegraphedTimer.start()
 
-
+#These timers should really belong to the boss OR should be informed by code from the boss
 func _on_AttackTimer_timeout():
     if state == IN_PROGRESS:
         var victim = clients[players[randi() % players.size()]]
         var dissonance = rng.randi_range(10,50)
         $ChestralBoss.talk(victim.playername + ' CAW CAW!')
         print('Squarked at ' + victim.playername + ' for: ' + str(victim.irritate(dissonance))) 
+
+
+func _on_InterferenceTimer_timeout():
+    if state == IN_PROGRESS:
+        $ChestralBoss.interference += rng.randi_range(30,100)
+        print('providing intereference...' + str($ChestralBoss.interference))
+        $ChestralBoss/InterferenceTimer.start()
+
+
+func _on_TelegraphedTimer_timeout():
+    if telegraphed and tele_target != null:
+        telegraphed = false
+        tele_target.irritate(tele_irritation)
+        $TelegraphedTimer.wait_time = 20
+        $TelegraphedTimer.start()
+    else:
+        telegraphed = true
+        tele_target = clients[players[randi() % players.size()]]
+        $ChestralBoss.talk(tele_target.playername + " YOU'RE NEXT!")
+        $TelegraphedTimer.wait_time = 8
+        $TelegraphedTimer.start()

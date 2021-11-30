@@ -12,6 +12,12 @@ export var base_align = 10
 export var connection_id = 0
 var image
 
+var entrance = ['sending my roadie away now', 'tuned up and good to go', 'ready to rock and/or roll',
+                "you've probably never heard of me", 'serving up the freshest beats', 'your new favourite band',
+                "I'm big in Japan", 'packing the heavy accompaniment!', 'hang on, broke a string', 
+                'the hills are alive with the sound of me, baby', "plink plink, let's do this",
+                "99 problems but a pitch ain't one", 'this harp goes to eleven', 'be careful in the mosh pit']
+
 #Music vectors created by ddraw - www.freepik.com
 
 # Called when the node enters the scene tree for the first time.
@@ -105,7 +111,7 @@ func train(new_name, instrument, id):
         base_align = 10
         image = load("res://Sprites/Instruments/violin.png")  
     $Sprite.texture = image
-    talk("Hi I am " + playername + " and I play the " + instrument)
+    talk("This is " + playername + ' - ' + entrance[randi() % entrance.size()])
 
 func set_avatar(filename):
     var avatar_file = 'res://Sprites/Orcs/' + filename

@@ -97,7 +97,15 @@ __meta__ = {
 [node name="AttackTimer" type="Timer" parent="."]
 wait_time = 15.0
 
+[node name="InterferenceTimer" type="Timer" parent="."]
+wait_time = 20.0
+
+[node name="TelegraphedTimer" type="Timer" parent="."]
+wait_time = 20.0
+
 [connection signal="timeout" from="ServerDataPulse" to="." method="_on_ServerDataPulse_timeout"]
 [connection signal="pressed" from="CanvasLayer/Panel/HitRandom" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="CanvasLayer/Panel/Unbalance" to="." method="_on_Unbalance_pressed"]
 [connection signal="timeout" from="AttackTimer" to="." method="_on_AttackTimer_timeout"]
+[connection signal="timeout" from="InterferenceTimer" to="." method="_on_InterferenceTimer_timeout"]
+[connection signal="timeout" from="TelegraphedTimer" to="." method="_on_TelegraphedTimer_timeout"]
