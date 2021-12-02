@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=2]
+[gd_scene load_steps=47 format=2]
 
 [ext_resource path="res://ChestralBoss.gd" type="Script" id=1]
 [ext_resource path="res://sprites/Bird/BirdFly_000.png" type="Texture" id=2]
@@ -35,6 +35,7 @@
 [ext_resource path="res://sprites/Speech/Bubble.png" type="Texture" id=33]
 [ext_resource path="res://ui_assets/FugazOne-Regular.ttf" type="DynamicFontData" id=34]
 [ext_resource path="res://sprites/Bird/shield.png" type="Texture" id=35]
+[ext_resource path="res://sprites/Attacks/badnote.png" type="Texture" id=36]
 
 [sub_resource type="SpriteFrames" id=3]
 animations = [ {
@@ -214,12 +215,17 @@ script = ExtResource( 1 )
 scale = Vector2( -1, 1 )
 frames = SubResource( 3 )
 animation = "Flap"
-frame = 17
+frame = 29
 playing = true
 
 [node name="ShieldSprite" type="Sprite" parent="Sprite"]
 modulate = Color( 1, 1, 1, 0 )
 texture = ExtResource( 35 )
+
+[node name="Beak" type="Node2D" parent="Sprite"]
+position = Vector2( -125, -53 )
+rotation = 3.14159
+scale = Vector2( 1, -1 )
 
 [node name="ProgressBar" type="ProgressBar" parent="."]
 margin_left = -99.0
@@ -283,4 +289,32 @@ anims/Speech = SubResource( 15 )
 [node name="InterferenceTimer" type="Timer" parent="."]
 wait_time = 15.0
 
+[node name="AttackTimer" type="Timer" parent="."]
+wait_time = 12.0
+one_shot = true
+
+[node name="ShieldTimer" type="Timer" parent="."]
+wait_time = 20.0
+
+[node name="TelegraphedTimer" type="Timer" parent="."]
+wait_time = 20.0
+one_shot = true
+
+[node name="Buffer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
+[node name="Note" type="Sprite" parent="."]
+modulate = Color( 1, 1, 1, 0 )
+scale = Vector2( 0.6, 0.6 )
+texture = ExtResource( 36 )
+
+[node name="Tween" type="Tween" parent="Note"]
+playback_speed = 1.8
+playback/speed = 1.8
+
+[connection signal="tween_all_completed" from="Tween" to="." method="_on_Tween_tween_all_completed"]
 [connection signal="timeout" from="InterferenceTimer" to="." method="_on_InterferenceTimer_timeout"]
+[connection signal="timeout" from="AttackTimer" to="." method="_on_AttackTimer_timeout"]
+[connection signal="timeout" from="ShieldTimer" to="." method="_on_ShieldTimer_timeout"]
+[connection signal="timeout" from="TelegraphedTimer" to="." method="_on_TelegraphedTimer_timeout"]

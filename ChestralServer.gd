@@ -20,9 +20,7 @@ const IN_PROGRESS: int = 1
 const ENDED_FAIL: int = 2
 const ENDED_WIN: int = 3
 
-var telegraphed = false
-var tele_target = null
-var tele_irritation = 200
+
 
 var state: int = 0
 
@@ -157,6 +155,7 @@ func _on_data(id):
         if incoming.begins_with('align|'):
             var align_value = int(incoming.right(6))
             perform_alignments(align_value, 1, id)
+            clients[get_adjacent(id)].send_attack($ChestralBoss.global_position)
         elif incoming.begins_with('aligm|'):
             var align_value = incoming.right(6)
             align_value = align_value.split('x')
@@ -164,6 +163,7 @@ func _on_data(id):
                 var align_mag = int(align_value[0])
                 var times = int(align_value[1])
                 perform_alignments(align_mag,times,id)
+                clients[get_adjacent(id)].send_attack($ChestralBoss.global_position)
             else:
                 $CanvasLayer/Panel/LabelStatus.text = 'Incorrect align multi command'
             #Should animate music notes here - from player to boss
@@ -233,38 +233,11 @@ func _on_Button_pressed():
         var dissonance = rng.randi_range(10,50)
         print('Squarked at ' + victim.playername + ' for: ' + str(victim.irritate(dissonance)))
 
+
+#ie start game :P
 func _on_Unbalance_pressed():
     state = IN_PROGRESS
     #This is to test keeping the boss in the game
-    $AttackTimer.start()
-    $InterferenceTimer.start()
-    $TelegraphedTimer.start()
-
-#These timers should really belong to the boss OR should be informed by code from the boss
-func _on_AttackTimer_timeout():
-    if state == IN_PROGRESS:
-        var victim = clients[players[randi() % players.size()]]
-        var dissonance = rng.randi_range(10,50)
-        $ChestralBoss.talk(victim.playername + ' CAW CAW!')
-        print('Squarked at ' + victim.playername + ' for: ' + str(victim.irritate(dissonance))) 
+    $ChestralBoss.start_attack_cycle()
 
 
-func _on_InterferenceTimer_timeout():
-    if state == IN_PROGRESS:
-        $ChestralBoss.interference += rng.randi_range(30,100)
-        print('providing intereference...' + str($ChestralBoss.interference))
-        $ChestralBoss/InterferenceTimer.start()
-
-
-func _on_TelegraphedTimer_timeout():
-    if telegraphed and tele_target != null:
-        telegraphed = false
-        tele_target.irritate(tele_irritation)
-        $TelegraphedTimer.wait_time = 20
-        $TelegraphedTimer.start()
-    else:
-        telegraphed = true
-        tele_target = clients[players[randi() % players.size()]]
-        $ChestralBoss.talk(tele_target.playername + " YOU'RE NEXT!")
-        $TelegraphedTimer.wait_time = 8
-        $TelegraphedTimer.start()
