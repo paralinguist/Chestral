@@ -11,6 +11,7 @@ export var harmonics = 0
 export var base_align = 10
 export var connection_id = 0
 var image
+var saved_angle = 0.0
 
 var entrance = ['sending my roadie away now', 'tuned up and good to go', 'ready to rock and/or roll',
                 "you've probably never heard of me", 'serving up the freshest beats', 'your new favourite band',
@@ -22,10 +23,11 @@ var entrance = ['sending my roadie away now', 'tuned up and good to go', 'ready 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+    randomize()
     $Sprite.scale = Vector2(0.5,0.5)
-    $Sprite.position.y -= 80
 
 func reposition(new_x,new_y, angle):
+    saved_angle = angle
     self.position.x = new_x
     self.position.y = new_y
     if new_y < 300:
@@ -199,3 +201,11 @@ func rename(new_name: String):
     $UI/Label.text = new_name
     talk("Hi I am " + playername + " now")
     name = new_name
+
+func send_attack(pos):
+    $Note/Tween.interpolate_property($Note, "position", Vector2.ZERO, to_local(pos), 2, Tween.TRANS_LINEAR)
+    $Note/Tween.interpolate_property($Note, "scale", Vector2(0.6, 0.6), Vector2(1.4, 1.4), 1, Tween.TRANS_SINE, Tween.EASE_IN)
+    $Note/Tween.interpolate_property($Note, "scale", Vector2(1.4, 1.4), Vector2(0.6, 0.6), 1, Tween.TRANS_SINE, Tween.EASE_OUT, 1)
+    $Note/Tween.interpolate_property($Note, "modulate", Color.transparent, Color.white, 0.6, Tween.TRANS_EXPO, Tween.EASE_OUT)
+    $Note/Tween.interpolate_property($Note, "modulate", Color.white, Color.transparent, 1.4, Tween.TRANS_EXPO, Tween.EASE_IN, 0.6)
+    $Note/Tween.start()
