@@ -33,20 +33,20 @@
 [ext_resource path="res://sprites/Bird/BirdFly_025.png" type="Texture" id=31]
 [ext_resource path="res://sprites/Speech/Stick.png" type="Texture" id=32]
 [ext_resource path="res://sprites/Speech/Bubble.png" type="Texture" id=33]
-[ext_resource path="res://ui_assets/FugazOne-Regular.ttf" type="DynamicFontData" id=34]
+[ext_resource path="res://ui_assets/RobotoCondensed-Regular.ttf" type="DynamicFontData" id=34]
 [ext_resource path="res://sprites/Bird/shield.png" type="Texture" id=35]
 [ext_resource path="res://sprites/Attacks/badnote.png" type="Texture" id=36]
 
 [sub_resource type="SpriteFrames" id=3]
 animations = [ {
-"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 7 ), ExtResource( 5 ), ExtResource( 15 ), ExtResource( 4 ), ExtResource( 6 ), ExtResource( 19 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 17 ), ExtResource( 18 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 13 ), ExtResource( 14 ), ExtResource( 12 ), ExtResource( 16 ), ExtResource( 20 ), ExtResource( 29 ), ExtResource( 22 ), ExtResource( 26 ), ExtResource( 21 ), ExtResource( 30 ), ExtResource( 27 ), ExtResource( 31 ), ExtResource( 24 ), ExtResource( 23 ), ExtResource( 28 ), ExtResource( 25 ) ],
-"loop": true,
-"name": "Flap",
-"speed": 60.0
-}, {
 "frames": [ ExtResource( 2 ) ],
 "loop": true,
 "name": "Idle",
+"speed": 60.0
+}, {
+"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 7 ), ExtResource( 5 ), ExtResource( 15 ), ExtResource( 4 ), ExtResource( 6 ), ExtResource( 19 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 17 ), ExtResource( 18 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 13 ), ExtResource( 14 ), ExtResource( 12 ), ExtResource( 16 ), ExtResource( 20 ), ExtResource( 29 ), ExtResource( 22 ), ExtResource( 26 ), ExtResource( 21 ), ExtResource( 30 ), ExtResource( 27 ), ExtResource( 31 ), ExtResource( 24 ), ExtResource( 23 ), ExtResource( 28 ), ExtResource( 25 ) ],
+"loop": true,
+"name": "Flap",
 "speed": 60.0
 } ]
 
@@ -215,7 +215,7 @@ script = ExtResource( 1 )
 scale = Vector2( -1, 1 )
 frames = SubResource( 3 )
 animation = "Flap"
-frame = 29
+frame = 12
 playing = true
 
 [node name="ShieldSprite" type="Sprite" parent="Sprite"]

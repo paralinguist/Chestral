@@ -155,7 +155,7 @@ func _on_data(id):
         if incoming.begins_with('align|'):
             var align_value = int(incoming.right(6))
             perform_alignments(align_value, 1, id)
-            clients[get_adjacent(id)].send_attack($ChestralBoss.global_position)
+            $ChestralBoss.get_attacked(clients[get_adjacent(id)].global_position)
         elif incoming.begins_with('aligm|'):
             var align_value = incoming.right(6)
             align_value = align_value.split('x')
@@ -163,7 +163,10 @@ func _on_data(id):
                 var align_mag = int(align_value[0])
                 var times = int(align_value[1])
                 perform_alignments(align_mag,times,id)
-                clients[get_adjacent(id)].send_attack($ChestralBoss.global_position)
+                for i in times:
+                    clients[get_adjacent(id)].send_attack($ChestralBoss.global_position)
+                    for j in range(6):
+                        yield(get_tree(), "idle_frame")
             else:
                 $CanvasLayer/Panel/LabelStatus.text = 'Incorrect align multi command'
             #Should animate music notes here - from player to boss

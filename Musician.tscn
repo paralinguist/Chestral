@@ -4,14 +4,14 @@
 [ext_resource path="res://sprites/Instruments/violin.png" type="Texture" id=2]
 [ext_resource path="res://sprites/Speech/Stick.png" type="Texture" id=3]
 [ext_resource path="res://sprites/Speech/Bubble.png" type="Texture" id=4]
-[ext_resource path="res://ui_assets/FugazOne-Regular.ttf" type="DynamicFontData" id=5]
+[ext_resource path="res://ui_assets/RobotoCondensed-Regular.ttf" type="DynamicFontData" id=5]
 [ext_resource path="res://Speech.gd" type="Script" id=6]
-[ext_resource path="res://sprites/Attacks/goodnotes.png" type="Texture" id=7]
+[ext_resource path="res://ui_assets/RobotoCondensed-Light.ttf" type="DynamicFontData" id=7]
 
 [sub_resource type="DynamicFont" id=12]
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
-font_data = ExtResource( 5 )
+font_data = ExtResource( 7 )
 
 [sub_resource type="Theme" id=13]
 default_font = SubResource( 12 )
@@ -94,15 +94,6 @@ script = ExtResource( 1 )
 position = Vector2( 0, -80 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 2 )
-
-[node name="Note" type="Sprite" parent="Sprite"]
-modulate = Color( 1, 1, 1, 0 )
-scale = Vector2( 1.2, 1.2 )
-texture = ExtResource( 7 )
-
-[node name="Tween" type="Tween" parent="Sprite/Note"]
-playback_speed = 2.5
-playback/speed = 2.5
 
 [node name="UI" type="VBoxContainer" parent="."]
 anchor_left = 0.5
@@ -235,7 +226,7 @@ __meta__ = {
 [node name="Label" type="Label" parent="UI"]
 margin_top = 72.0
 margin_right = 308.0
-margin_bottom = 96.0
+margin_bottom = 91.0
 text = "Muso"
 align = 1
 __meta__ = {

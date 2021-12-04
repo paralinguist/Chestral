@@ -12,6 +12,8 @@ var tele_irritation = 200
 
 var targetting: bool = false
 
+const NOTE = preload("res://Note.tscn")
+
 var bard_scale = 1.0
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -149,3 +151,8 @@ func send_attack(pos):
     $Note/Tween.interpolate_property($Note, "modulate", Color.transparent, Color.white, 0.6, Tween.TRANS_EXPO, Tween.EASE_OUT)
     $Note/Tween.interpolate_property($Note, "modulate", Color.white, Color.transparent, 1.4, Tween.TRANS_EXPO, Tween.EASE_IN, 0.6)
     $Note/Tween.start()
+
+func get_attacked(pos):
+    var new_note = NOTE.instance()
+    add_child(new_note)
+    new_note.send_attack(pos)
