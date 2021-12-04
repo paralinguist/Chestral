@@ -13,6 +13,8 @@ export var connection_id = 0
 var image
 var saved_angle = 0.0
 
+var dead: bool = false
+
 var entrance = ['sending my roadie away now', 'tuned up and good to go', 'ready to rock and/or roll',
                 "you've probably never heard of me", 'serving up the freshest beats', 'your new favourite band',
                 "I'm big in Japan", 'packing the heavy accompaniment!', 'hang on, broke a string', 
@@ -43,6 +45,8 @@ func reposition(new_x,new_y, angle):
 
 #directly changes interference + label bar
 func set_interference(inter_value, additive=true, timer=true):
+    if dead:
+        return
     if additive:
         interference = interference + inter_value
     else:
@@ -57,6 +61,8 @@ func set_interference(inter_value, additive=true, timer=true):
 
 #directly changes harmonics + label bar
 func set_harmonics(harmonics_value, additive=true, timer=true):
+    if dead:
+        return
     if additive:
         harmonics = harmonics + harmonics_value
     else:
@@ -71,6 +77,8 @@ func set_harmonics(harmonics_value, additive=true, timer=true):
 
 #directly changes resonance + label bar
 func set_resonance(resonance_value, additive=true, timer=true):
+    if dead:
+        return
     if additive:
         resonance = resonance + resonance_value
     else:
@@ -85,6 +93,8 @@ func set_resonance(resonance_value, additive=true, timer=true):
 
 #directly changes soothe + label bar
 func set_soothe(soothe_value, additive=true, timer=true, instant=false):
+    if dead:
+        return
     if instant:
         current_irritation = current_irritation - soothe_value
         if current_irritation < 0:
@@ -124,6 +134,8 @@ func set_avatar(filename):
 #TODO: check for death
 func _process(delta):
     $UI/HBox/Irritation.value = current_irritation
+    if dead:
+        return
     $UI/Soothe.value = $SootheTimer.time_left
     $UI/Interference.value = $IntTimer.time_left
     $UI/HBox/Harmonics.value = $HarmonicsTimer.time_left
@@ -135,6 +147,8 @@ func _on_IntTimer_timeout():
     set_interference(0, false)
 
 func _on_SootheTimer_timeout():
+    if dead:
+        return
     current_irritation = current_irritation - soothe
     if current_irritation < 0:
         current_irritation = 0
@@ -174,6 +188,10 @@ func irritate(dissonance):
         $Sprite.modulate = Color(1,0.5,0.5)
         start_hurt_shake()
         $HurtTimer.start()
+    if current_irritation > max_irritation:
+        get_parent().kill_player(self)
+        dead = true
+        $AnimationPlayer.play("Die")
     return damage_done
 
 func _on_HurtTimer_timeout():

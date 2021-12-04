@@ -9,6 +9,7 @@ var _server = WebSocketServer.new()
 
 var clients = {}
 var players = []
+var dead_players = []
 
 var Musician = load("res://Musician.tscn")
 
@@ -151,6 +152,8 @@ func _on_data(id):
         elif incoming.begins_with('avata|'):
             clients[id].set_avatar(incoming.right(6))
     if incoming and state == IN_PROGRESS:
+        if dead_players.has(clients[id]):
+            return
         _server.get_peer(id).put_packet(message.to_utf8())
         if incoming.begins_with('align|'):
             var align_value = int(incoming.right(6))
@@ -198,7 +201,9 @@ func _on_data(id):
             if len(ids) == 2:
                 var source = clients[int(ids[0])]
                 var destination = clients[int(ids[1])]
-                if command == 'shint':
+                if dead_players.has(destination):
+                    pass
+                elif command == 'shint':
                     var interference = source.interference
                     source.set_interference(0, false)
                     destination.set_interference(interference, true)
@@ -240,7 +245,12 @@ func _on_Button_pressed():
 #ie start game :P
 func _on_Unbalance_pressed():
     state = IN_PROGRESS
-    #This is to test keeping the boss in the game
     $ChestralBoss.start_attack_cycle()
 
 
+func kill_player(pl):
+    dead_players.append(pl)
+    if len(dead_players) == len(players):
+        state = ENDED_FAIL
+        $ChestralBoss.talk("SCRAWWKKKK")
+        $ChestralBoss.targetting = false

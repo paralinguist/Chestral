@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://ChestralServer.gd" type="Script" id=1]
 [ext_resource path="res://ChestralBoss.tscn" type="PackedScene" id=2]
 [ext_resource path="res://ui_assets/RobotoCondensed-Regular.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://sprites/grass.png" type="Texture" id=4]
 
 [sub_resource type="DynamicFont" id=1]
 size = 24
@@ -22,8 +23,30 @@ wait_time = 12.0
 autostart = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 4 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Unbalance" type="Button" parent="CanvasLayer"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -35.0
+margin_right = 118.0
+theme = SubResource( 2 )
+text = "Start Game"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Panel" type="Panel" parent="CanvasLayer"]
+visible = false
 anchor_top = 1.0
 anchor_bottom = 1.0
 margin_top = -361.0
@@ -74,16 +97,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Unbalance" type="Button" parent="CanvasLayer/Panel"]
-margin_left = 248.0
-margin_top = 298.0
-margin_right = 343.0
-margin_bottom = 329.0
-text = "Start Game"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="LabelIPs" type="Label" parent="CanvasLayer/Panel"]
 margin_left = 32.0
 margin_top = 15.0
@@ -94,5 +107,5 @@ __meta__ = {
 }
 
 [connection signal="timeout" from="ServerDataPulse" to="." method="_on_ServerDataPulse_timeout"]
+[connection signal="pressed" from="CanvasLayer/Unbalance" to="." method="_on_Unbalance_pressed"]
 [connection signal="pressed" from="CanvasLayer/Panel/HitRandom" to="." method="_on_Button_pressed"]
-[connection signal="pressed" from="CanvasLayer/Panel/Unbalance" to="." method="_on_Unbalance_pressed"]

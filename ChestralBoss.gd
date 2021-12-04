@@ -17,6 +17,7 @@ const NOTE = preload("res://Note.tscn")
 var bard_scale = 1.0
 # Called when the node enters the scene tree for the first time.
 func _ready():
+    randomize()
     $ProgressBar.max_value = misalignment
     $ProgressBar.value = misalignment
     talk("SCRAWWKKKK")
@@ -38,8 +39,9 @@ func realign(align_value):
 
 func _process(delta):
     $ProgressBar.value = misalignment
-    if get_parent().state == 1:    
-        bard_scale = 1/get_parent().clients.size()
+    if get_parent().state == 1 or get_parent().state == 2:    
+        #change this to scale required damage
+        bard_scale = 1.0
         if not targetting:
             position = lerp(position, get_position(), 0.02)
         $Sprite.animation == "Flap"
@@ -89,10 +91,12 @@ func _on_AttackTimer_timeout():
     if get_parent().state == get_parent().IN_PROGRESS:
         var players = get_parent().players
         var victim = get_parent().clients[players[randi() % players.size()]]
-        print(victim)
-        move_to_position(get_angle_position(victim.saved_angle))
+        if get_parent().dead_players.has(victim):
+            _on_AttackTimer_timeout()
+            return
         if not $Buffer.is_stopped():
             yield($Buffer, "timeout")
+        move_to_position(get_angle_position(victim.saved_angle))
         $Buffer.start()
         yield($Buffer, "timeout")
         var dissonance = get_parent().rng.randi_range(10,50)
@@ -111,10 +115,14 @@ func _on_ShieldTimer_timeout():
 
 func _on_TelegraphedTimer_timeout():
     var players = get_parent().players
+    if tele_target != null and get_parent().dead_players.has(tele_target):
+        telegraphed = false
+    if get_parent().state != get_parent().IN_PROGRESS:
+        return
     if telegraphed and tele_target != null and tele_target.is_inside_tree():
-        move_to_position(get_angle_position(tele_target.saved_angle))
         if not $Buffer.is_stopped():
             yield($Buffer, "timeout")
+        move_to_position(get_angle_position(tele_target.saved_angle))
         $Buffer.start()
         yield($Buffer, "timeout")
         telegraphed = false
@@ -122,11 +130,14 @@ func _on_TelegraphedTimer_timeout():
         $TelegraphedTimer.wait_time = 20
         $TelegraphedTimer.start()
     else:
-        telegraphed = true
         tele_target = get_parent().clients[players[randi() % players.size()]]
+        if get_parent().dead_players.has(tele_target):
+            _on_TelegraphedTimer_timeout()
+            return
         talk(tele_target.playername + " YOU'RE NEXT!")
         $TelegraphedTimer.wait_time = 8
         $TelegraphedTimer.start()
+        telegraphed = true
 
 func start_attack_cycle():
     $AttackTimer.start()
