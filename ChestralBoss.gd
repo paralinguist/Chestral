@@ -88,7 +88,7 @@ func _on_InterferenceTimer_timeout():
 
 #These timers should really belong to the boss OR should be informed by code from the boss
 func _on_AttackTimer_timeout():
-    if get_parent().state == get_parent().IN_PROGRESS:
+    if get_parent().state == get_parent().IN_PROGRESS and len(get_parent().players) > 0:
         var players = get_parent().players
         var victim = get_parent().clients[players[randi() % players.size()]]
         if get_parent().dead_players.has(victim):
@@ -134,14 +134,15 @@ func _on_TelegraphedTimer_timeout():
     else:
         if not $Buffer.is_stopped():
             yield($Buffer, "timeout")
-        tele_target = get_parent().clients[players[randi() % players.size()]]
-        if get_parent().dead_players.has(tele_target):
-            _on_TelegraphedTimer_timeout()
-            return
-        talk(tele_target.playername + " YOU'RE NEXT!")
-        $TelegraphedTimer.wait_time = 4
-        $TelegraphedTimer.start()
-        telegraphed = true
+        if len(players) > 0:
+            tele_target = get_parent().clients[players[randi() % players.size()]]
+            if get_parent().dead_players.has(tele_target):
+                _on_TelegraphedTimer_timeout()
+                return
+            talk(tele_target.playername + " YOU'RE NEXT!")
+            $TelegraphedTimer.wait_time = 4
+            $TelegraphedTimer.start()
+            telegraphed = true
 
 func start_attack_cycle():
     $AttackTimer.start()

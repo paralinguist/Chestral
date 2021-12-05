@@ -26,7 +26,7 @@ var entrance = ['sending my roadie away now', 'tuned up and good to go', 'ready 
 # Called when the node enters the scene tree for the first time.
 func _ready():
     randomize()
-    $Sprite.scale = Vector2(0.5,0.5)
+    $Sprite.scale = Vector2(0.3,0.3)
 
 func reposition(new_x,new_y, angle):
     saved_angle = angle

@@ -21,7 +21,7 @@ const IN_PROGRESS: int = 1
 const ENDED_FAIL: int = 2
 const ENDED_WIN: int = 3
 
-
+var music_files = ['airtone_-_pumpkinSoup.mp3', 'airtone_-_blackSnow.mp3', 'airtone_-_departures.mp3', 'airtone_-_panspermia_1.mp3']
 
 var state: int = 0
 
@@ -169,7 +169,7 @@ func _on_data(id):
                 var times = int(align_value[1])
                 perform_alignments(align_mag,times,id)
                 for i in times:
-                    clients[get_adjacent(id)].send_attack($ChestralBoss.global_position)
+                    $ChestralBoss.get_attacked(clients[get_adjacent(id)].global_position)
                     for j in range(6):
                         yield(get_tree(), "idle_frame")
             else:
@@ -249,6 +249,8 @@ func _on_Unbalance_pressed():
     if state == WAITING:
         state = IN_PROGRESS
         $ChestralBoss.start_attack_cycle()
+        $Music.stream = load('res://Music/' + music_files[randi() % music_files.size()])
+        $Music.play()
     elif state != IN_PROGRESS:
         new_game()
 
@@ -261,6 +263,7 @@ func kill_player(pl):
         $ChestralBoss.targetting = false
 
 func new_game():
+    $Music.stop()
     state = WAITING
     $ChestralBoss.queue_free()
     dead_players = []

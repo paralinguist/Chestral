@@ -106,6 +106,8 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Music" type="AudioStreamPlayer" parent="."]
+
 [connection signal="timeout" from="ServerDataPulse" to="." method="_on_ServerDataPulse_timeout"]
 [connection signal="pressed" from="CanvasLayer/Unbalance" to="." method="_on_Unbalance_pressed"]
 [connection signal="pressed" from="CanvasLayer/Panel/HitRandom" to="." method="_on_Button_pressed"]
