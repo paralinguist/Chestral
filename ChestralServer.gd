@@ -158,10 +158,12 @@ func _on_data(id):
         if incoming.begins_with('align|'):
             var align_value = int(incoming.right(6))
             perform_alignments(align_value, 1, id)
+            clients[id].get_node("AudioStreamPlayer").play()
             $ChestralBoss.get_attacked(clients[get_adjacent(id)].global_position)
         elif incoming.begins_with('aligm|'):
             var align_value = incoming.right(6)
             align_value = align_value.split('x')
+            clients[id].get_node("AudioStreamPlayer").play()
             if len(align_value) == 2:
                 var align_mag = int(align_value[0])
                 var times = int(align_value[1])
@@ -244,8 +246,11 @@ func _on_Button_pressed():
 
 #ie start game :P
 func _on_Unbalance_pressed():
-    state = IN_PROGRESS
-    $ChestralBoss.start_attack_cycle()
+    if state == WAITING:
+        state = IN_PROGRESS
+        $ChestralBoss.start_attack_cycle()
+    elif state != IN_PROGRESS:
+        new_game()
 
 
 func kill_player(pl):
@@ -254,3 +259,18 @@ func kill_player(pl):
         state = ENDED_FAIL
         $ChestralBoss.talk("SCRAWWKKKK")
         $ChestralBoss.targetting = false
+
+func new_game():
+    state = WAITING
+    $ChestralBoss.queue_free()
+    dead_players = []
+    for id in clients:
+        clients[id].current_irritation = 0
+        clients[id].interference = 0
+        clients[id].soothe = 0
+        clients[id].harmonics = 0
+        clients[id].dead = false
+        clients[id].get_node("AnimationPlayer").play("RESET")
+    yield(get_tree(), "idle_frame")
+    add_child(load("res://ChestralBoss.tscn").instance())
+    $ChestralBoss.position = Vector2(800, 500)

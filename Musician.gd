@@ -96,6 +96,7 @@ func set_soothe(soothe_value, additive=true, timer=true, instant=false):
     if dead:
         return
     if instant:
+        $Particles/Soothe.emitting = true
         current_irritation = current_irritation - soothe_value
         if current_irritation < 0:
             current_irritation = 0
@@ -126,7 +127,9 @@ func train(new_name, instrument, id):
     talk("This is " + playername + ' - ' + entrance[randi() % entrance.size()])
 
 func set_avatar(filename):
-    var avatar_file = 'res://Sprites/Orcs/' + filename
+    var avatar_file = 'res://sprites/Orcs/' + filename
+    if avatar_file == "res://sprites/Orcs/lauren_glock.png":
+        $AudioStreamPlayer.stream = load("res://Sounds/Glock.wav")
     if ResourceLoader.exists(avatar_file):
         image = load(avatar_file)
         $Sprite.texture = image
@@ -134,12 +137,15 @@ func set_avatar(filename):
 #TODO: check for death
 func _process(delta):
     $UI/HBox/Irritation.value = current_irritation
-    if dead:
-        return
+#    if dead:
+#        return
     $UI/Soothe.value = $SootheTimer.time_left
     $UI/Interference.value = $IntTimer.time_left
+    $Particles/Interference.emitting = $UI/Interference.value > 0
     $UI/HBox/Harmonics.value = $HarmonicsTimer.time_left
+    $Particles/Harmonics.emitting = $UI/HBox/Harmonics.value > 0
     $UI/HBox/Resonance.value = $ResonanceTimer.time_left
+    $Particles/Resonance.emitting = $UI/HBox/Resonance.value > 0
     $UI/HBox/Irritation.value = current_irritation
     #Need to check for "dead" player here and handle
 
@@ -149,6 +155,7 @@ func _on_IntTimer_timeout():
 func _on_SootheTimer_timeout():
     if dead:
         return
+    $Particles/Soothe.emitting = true
     current_irritation = current_irritation - soothe
     if current_irritation < 0:
         current_irritation = 0

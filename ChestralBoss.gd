@@ -102,6 +102,7 @@ func _on_AttackTimer_timeout():
         var dissonance = get_parent().rng.randi_range(10,50)
         send_attack(victim.global_position)
         talk(victim.playername + ' CAW CAW!')
+        $AudioStreamPlayer.play(0.0)
         print('Squarked at ' + victim.playername + ' for: ' + str(victim.irritate(dissonance))) 
         $AttackTimer.start()
 
@@ -126,16 +127,19 @@ func _on_TelegraphedTimer_timeout():
         $Buffer.start()
         yield($Buffer, "timeout")
         telegraphed = false
+        $AudioStreamPlayer.play(0.0)
         tele_target.irritate(tele_irritation)
-        $TelegraphedTimer.wait_time = 20
+        $TelegraphedTimer.wait_time = 26
         $TelegraphedTimer.start()
     else:
+        if not $Buffer.is_stopped():
+            yield($Buffer, "timeout")
         tele_target = get_parent().clients[players[randi() % players.size()]]
         if get_parent().dead_players.has(tele_target):
             _on_TelegraphedTimer_timeout()
             return
         talk(tele_target.playername + " YOU'RE NEXT!")
-        $TelegraphedTimer.wait_time = 8
+        $TelegraphedTimer.wait_time = 4
         $TelegraphedTimer.start()
         telegraphed = true
 

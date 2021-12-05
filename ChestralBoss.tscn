@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=2]
+[gd_scene load_steps=48 format=2]
 
 [ext_resource path="res://ChestralBoss.gd" type="Script" id=1]
 [ext_resource path="res://sprites/Bird/BirdFly_000.png" type="Texture" id=2]
@@ -36,6 +36,7 @@
 [ext_resource path="res://ui_assets/RobotoCondensed-Regular.ttf" type="DynamicFontData" id=34]
 [ext_resource path="res://sprites/Bird/shield.png" type="Texture" id=35]
 [ext_resource path="res://sprites/Attacks/badnote.png" type="Texture" id=36]
+[ext_resource path="res://Sounds/Dissonance.wav" type="AudioStream" id=37]
 
 [sub_resource type="SpriteFrames" id=3]
 animations = [ {
@@ -215,7 +216,7 @@ script = ExtResource( 1 )
 scale = Vector2( -1, 1 )
 frames = SubResource( 3 )
 animation = "Flap"
-frame = 12
+frame = 25
 playing = true
 
 [node name="ShieldSprite" type="Sprite" parent="Sprite"]
@@ -290,14 +291,14 @@ anims/Speech = SubResource( 15 )
 wait_time = 15.0
 
 [node name="AttackTimer" type="Timer" parent="."]
-wait_time = 12.0
+wait_time = 18.0
 one_shot = true
 
 [node name="ShieldTimer" type="Timer" parent="."]
 wait_time = 20.0
 
 [node name="TelegraphedTimer" type="Timer" parent="."]
-wait_time = 20.0
+wait_time = 26.0
 one_shot = true
 
 [node name="Buffer" type="Timer" parent="."]
@@ -312,6 +313,9 @@ texture = ExtResource( 36 )
 [node name="Tween" type="Tween" parent="Note"]
 playback_speed = 1.8
 playback/speed = 1.8
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 37 )
 
 [connection signal="tween_all_completed" from="Tween" to="." method="_on_Tween_tween_all_completed"]
 [connection signal="timeout" from="InterferenceTimer" to="." method="_on_InterferenceTimer_timeout"]

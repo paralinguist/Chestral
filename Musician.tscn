@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://Musician.gd" type="Script" id=1]
 [ext_resource path="res://sprites/Instruments/violin.png" type="Texture" id=2]
@@ -6,6 +6,8 @@
 [ext_resource path="res://sprites/Speech/Bubble.png" type="Texture" id=4]
 [ext_resource path="res://ui_assets/RobotoCondensed-Regular.ttf" type="DynamicFontData" id=5]
 [ext_resource path="res://Speech.gd" type="Script" id=6]
+[ext_resource path="res://sprites/particle.png" type="Texture" id=7]
+[ext_resource path="res://Sounds/Piano.wav" type="AudioStream" id=8]
 
 [sub_resource type="DynamicFont" id=12]
 outline_size = 2
@@ -78,7 +80,7 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"points": PoolRealArray( 0.2, -0.25, 0, 0.25, 0 ),
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0 ),
 "times": PoolRealArray( 0 )
 }
 tracks/1/type = "bezier"
@@ -88,7 +90,7 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"points": PoolRealArray( 1, -0.25, 0, 0.25, 0 ),
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0 ),
 "times": PoolRealArray( 0 )
 }
 tracks/2/type = "value"
@@ -139,6 +141,24 @@ tracks/1/keys = {
 "points": PoolRealArray( 0, -0.25, 0, 0.25, 0, 1, -0.25, 0, 0.25, 0, 1, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
 "times": PoolRealArray( 0, 0.4, 4.1, 4.5 )
 }
+
+[sub_resource type="Gradient" id=16]
+offsets = PoolRealArray( 0, 0.645418, 0.996016 )
+colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=17]
+gradient = SubResource( 16 )
+
+[sub_resource type="ParticlesMaterial" id=18]
+flag_disable_z = true
+spread = 180.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 80.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+linear_accel = -10.0
+scale = 0.1
+color_ramp = SubResource( 17 )
 
 [node name="Musician" type="Node2D"]
 position = Vector2( 400, 400 )
@@ -310,8 +330,9 @@ one_shot = true
 [node name="HurtShake" type="Tween" parent="."]
 
 [node name="Speech" type="Sprite" parent="."]
+modulate = Color( 1, 1, 1, 0 )
 position = Vector2( 47, -125 )
-scale = Vector2( 0.2, 0.2 )
+scale = Vector2( 0.2, 1e-05 )
 z_index = 4
 texture = ExtResource( 3 )
 offset = Vector2( 80, -80 )
@@ -344,6 +365,51 @@ __meta__ = {
 anims/Die = SubResource( 14 )
 anims/RESET = SubResource( 10 )
 anims/Speech = SubResource( 11 )
+
+[node name="Particles" type="Node2D" parent="."]
+position = Vector2( 0, -80 )
+z_index = -2
+
+[node name="Interference" type="Particles2D" parent="Particles"]
+modulate = Color( 0.698039, 0.145098, 0.886275, 1 )
+emitting = false
+amount = 16
+lifetime = 1.5
+speed_scale = 2.0
+process_material = SubResource( 18 )
+texture = ExtResource( 7 )
+
+[node name="Resonance" type="Particles2D" parent="Particles"]
+modulate = Color( 0.815686, 0.854902, 0.14902, 1 )
+emitting = false
+amount = 16
+lifetime = 1.5
+speed_scale = 2.0
+process_material = SubResource( 18 )
+texture = ExtResource( 7 )
+
+[node name="Harmonics" type="Particles2D" parent="Particles"]
+modulate = Color( 0.356863, 0.54902, 1, 1 )
+emitting = false
+amount = 16
+lifetime = 1.5
+speed_scale = 2.0
+process_material = SubResource( 18 )
+texture = ExtResource( 7 )
+
+[node name="Soothe" type="Particles2D" parent="Particles"]
+modulate = Color( 0.0784314, 0.937255, 0.329412, 1 )
+emitting = false
+amount = 16
+lifetime = 1.5
+one_shot = true
+speed_scale = 4.0
+explosiveness = 0.7
+process_material = SubResource( 18 )
+texture = ExtResource( 7 )
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 8 )
 
 [connection signal="timeout" from="IntTimer" to="." method="_on_IntTimer_timeout"]
 [connection signal="timeout" from="HarmonicsTimer" to="." method="_on_HarmonicsTimer_timeout"]
