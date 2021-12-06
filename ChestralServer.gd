@@ -21,7 +21,7 @@ const IN_PROGRESS: int = 1
 const ENDED_FAIL: int = 2
 const ENDED_WIN: int = 3
 
-var music_files = ['airtone_-_pumpkinSoup.mp3', 'airtone_-_blackSnow.mp3', 'airtone_-_departures.mp3', 'airtone_-_panspermia_1.mp3']
+var music_files = ['airtone_-_pumpkinSoup.mp3', 'airtone_-_blackSnow.mp3', 'airtone_-_departures.mp3', 'airtone_-_panspermia_1.mp3', 'darksouls.mp3']
 
 var state: int = 0
 
